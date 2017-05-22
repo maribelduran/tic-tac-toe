@@ -76,6 +76,7 @@ var model = {
 	game: {},
 	initializeGame: function(){
 		this.game = new TicTacToe();
+		console.log("Initialized a new TicTacToe game! woo!")
 	}
 };
 

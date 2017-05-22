@@ -80,3 +80,20 @@ var model = {
 	}
 };
 
+var controller = {
+	initializeGame: function(){
+		model.initializeGame();
+	},
+	setPlayer: function(symbol){
+		model.game.setPlayer(symbol);
+	}
+};
+
+//1) initialize game when this script loaded
+//controller.initializeGame();
+//2) Player 1 chooses whether they want to play as "X" or "O";
+//3) Start game after player 1 chooses their symbol
+//4) Check if player1 goes first or player 2 goes first then 
+//5) Keep letting each player take turns on seelcting a position until someone 
+//wins or the game is finished.
+//6) Automatically start new game

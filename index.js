@@ -79,6 +79,15 @@ var model = {
 	}
 };
 
+var controller = {
+	initializeGame: function(){
+		model.initializeGame();
+	},
+	setPlayer: function(symbol){
+		model.game.setPlayer(symbol);
+	}
+};
+
 
 //1) initialize game when this script loaded
 //controller.initializeGame();

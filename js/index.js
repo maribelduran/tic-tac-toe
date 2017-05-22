@@ -70,3 +70,13 @@ TicTactoToe.prototype.reset = function(){
 	[0,0,0]
 	];
 }
+
+//model
+var model = {
+	game: {},
+	initializeGame: function(){
+		this.game = new TicTacToe();
+		console.log("Initialized a new TicTacToe game! ")
+	}
+};
+

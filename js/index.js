@@ -34,7 +34,6 @@ TicTacToe.prototype.setCurrentPlayer = function(player){
 		this.currentPlayer = getTurn == 0 ? this.player1 : this.player2;
 	}
 	else{
-		console.log(player);
 		this.currentPlayer = player;
 	}
 };
@@ -59,14 +58,13 @@ TicTacToe.prototype.play = function(player, row, col){
 		this.currentPlayer.score +=1;
 		this.winner = this.currentPlayer;
 		this.setCurrentPlayer(this.winner);
-		//update the winner's score
 		//need to save the position that won the game to show 
 		this.finished = true;
 		return position;
 
 	}
 	else{
-		console.log("did not find a winner");
+		console.log("Should be callling isGameFinished()");
 		this.finished = this.isGameFinished();
 	}
 
@@ -76,7 +74,6 @@ TicTacToe.prototype.play = function(player, row, col){
 	return position;
 };
 
-//loop through all of the rows to see if there is a  horizontal, vertical, or diagonal line of 3 of one's own symbol    
 TicTacToe.prototype.checkWinner = function(){
 	var row = 0, col = 0;
 	//checks if there is a horizontal line of 3 of one's own symbol
@@ -114,9 +111,13 @@ TicTacToe.prototype.checkWinner = function(){
 }
 
 TicTacToe.prototype.isGameFinished = function(){
-	//if there is  a winner return true;
-	//else check if all of the 
-	return false;
+	for (var i=0; i<this.board.length; i++){
+		var row = this.board[i];
+		if (row.indexOf(0) != -1){
+			return false;
+		}
+	}
+	return true;
 }
 
 //returns an array that represents the row and column position

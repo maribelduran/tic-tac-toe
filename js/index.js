@@ -25,8 +25,18 @@ TicTacToe.prototype.setPlayers = function(name, symbol){
 	this.player2 = new player("computer", (this.player1.symbol.toUpperCase() == "X") ? "O": "X");
 
 	//When a new game is started, the first turn is picked randomly.
-	var getTurn = flipCoin(0,MAX_PLAYERS);
-	this.currentPlayer = (getTurn == 0) ? this.player1 : this.player2;
+	this.setCurrentPlayer("random");
+};
+
+TicTacToe.prototype.setCurrentPlayer = function(player){
+	if (player === "random"){
+		var getTurn = flipCoin(0,MAX_PLAYERS);
+		this.currentPlayer = getTurn == 0 ? this.player1 : this.player2;
+	}
+	else{
+		console.log(player);
+		this.currentPlayer = player;
+	}
 };
 
 //returns a random number between 0 and max-1
@@ -41,26 +51,65 @@ TicTacToe.prototype.play = function(player, row, col){
 	}
 	else{
 		this.board[row][col] = this.player1.symbol;
-
 	}
 		
 	var isWinner = this.checkWinner();	
 	if (isWinner){
-		console.log("Winner is:", player);
+		console.log("found a winner!");
+		this.currentPlayer.score +=1;
+		this.winner = this.currentPlayer;
+		this.setCurrentPlayer(this.winner);
+		//update the winner's score
+		//need to save the position that won the game to show 
+		this.finished = true;
+		return position;
+
 	}
-	
-	var gameFinished = this.isGameFinished()
-	if (gameFinished){
-		console.log("Game has ended!");
+	else{
+		console.log("did not find a winner");
+		this.finished = this.isGameFinished();
 	}
+
 	//Switch players
-	this.currentPlayer = (this.currentPlayer == this.player1) ? this.player2 : this.player1;
+	this.currentPlayer = this.currentPlayer == this.player1 ? this.player2 : this.player1;
 
 	return position;
 };
 
-//loop through all of the rows to see if there is a  horizontal, vertical, or diagonal line of 3 of one's own discs    
+//loop through all of the rows to see if there is a  horizontal, vertical, or diagonal line of 3 of one's own symbol    
 TicTacToe.prototype.checkWinner = function(){
+	var row = 0, col = 0;
+	//checks if there is a horizontal line of 3 of one's own symbol
+	 for (row=0; row<=2; row++){
+	 		if (this.board[row][col] === this.board[row][col+ 1] && this.board[row][col] != 0){
+	 			if (this.board[row][col+1] === this.board[row][col+ 2]){
+	 				return true;
+        }
+      }
+  }
+  //checks if there is a vertical line of 3 of one's own symbol
+  for (col=0, row=0; col<=2; col++){
+  	if (this.board[row][col] === this.board[row+1][col] && this.board[row][col]!= 0){
+  		if (this.board[row+1][col] === this.board[row+2][col]){
+	 				return true;
+        }
+   }
+ 	}
+ 	col=0, row=0;
+ 	//checks if there is a diagonal line of 3 of one's own symbol
+  	if (this.board[row][col] === this.board[row+1][col+1] && this.board[row][col]!= 0){
+  		if (this.board[row+1][col+1] === this.board[row+2][col+2]){
+	 				return true;
+        }
+   }
+	col=0, row=0;
+
+ 	//checks if there is a diagonal line of 3 of one's own symbol
+ 	if (this.board[row+2][col] === this.board[row+1][col+1] && this.board[row+2][col]!=0){
+ 		if (this.board[row+1][col+1] == this.board[row][col+2]){
+   		return true;
+   	}
+  }
 	return false;
 }
 
@@ -85,6 +134,16 @@ TicTacToe.prototype.reset = function(){
 	this.player1 = {};
 	this.player2 = {};
 	this.currentPlayer = null;
+	this.winner = null;
+	this.finished = false;
+	this.board = [
+	[0,0,0],
+	[0,0,0],
+	[0,0,0]
+	];
+}
+
+TicTacToe.prototype.clearBoard = function(){
 	this.finished = false;
 	this.winner = null;
 	this.board = [
@@ -94,22 +153,21 @@ TicTacToe.prototype.reset = function(){
 	];
 }
 
+
+
 //model
 var model = {
 	game: {},
-	initializeGame: function(){
+	setupGame: function(){
 		this.game = new TicTacToe();
 		console.log("Initialized a new TicTacToe game! ")
 		return this.game;
-	},
-	resetGame: function(){
-		this.game.reset();
 	}
 };
 
 var controller = {
 	initializeGame: function(){
-		console.log(model.initializeGame());
+		console.log(model.setupGame());
 		console.log("Player1 choose your symbol");
 	},
 	setPlayers: function(name, symbol){
@@ -139,28 +197,28 @@ var controller = {
 				//wait for player1 to make a turn
 			}
 		}else{
-				this.stopGame();
+			this.stopGame();
 		}
 	
 	},
 	stopGame: function(){
-		//display who won
-		//if player1  won, then it's their turn
-		//if computer  won, then it's their turn
+		//if there is no winner, then set the player using the "random" setting
+		console.log("Winner is:", model.game.winner);
+		model.game.clearBoard();
 		this.playGame();
 	},
 		//Once the game is finished, display who won or if it was a tie. 
 		//Change current player to winner, and start game again
 		//if game is reset, then stop game and display option to let player1 choose their symbol
 	player1Turn: function(player1, row, col){
-			
 			model.game.play(player, row, col);
 			console.log("Player1's move was: ", row,col);
 			this.playGame();
 	},
 	resetGame: function(){
 		//clearTimeout
-		model.game.resetGame();
+		model.game.reset();
+		console.log("Player1 choose your symbol");
 	}
 };
 

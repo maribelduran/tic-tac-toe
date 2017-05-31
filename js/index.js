@@ -23,7 +23,6 @@ function player(name, symbol){
 TicTacToe.prototype.setPlayers = function(name, symbol){
 	this.player1 = new player(name, symbol.toUpperCase());
 	this.player2 = new player("computer", (this.player1.symbol.toUpperCase() == "X") ? "O": "X");
-
 	//When a new game is started, the first turn is picked randomly.
 	this.setCurrentPlayer("random");
 };
@@ -44,6 +43,7 @@ function flipCoin(min, max){
 }
 
 TicTacToe.prototype.play = function(player, row, col){
+	//place symbol
 	if (player == "computer"){
 		var position = this.getMove();
 		this.board[position.row][position.col] = this.player2.symbol;
@@ -51,7 +51,7 @@ TicTacToe.prototype.play = function(player, row, col){
 	else{
 		this.board[row][col] = this.player1.symbol;
 	}
-		
+	//check if there is a winner	
 	var isWinner = this.checkWinner();	
 	if (isWinner){
 		console.log("found a winner!");
@@ -63,14 +63,9 @@ TicTacToe.prototype.play = function(player, row, col){
 		return position;
 
 	}
-	else{
-		console.log("Should be callling isGameFinished()");
-		this.finished = this.isGameFinished();
-	}
-
+	this.finished = this.isGameFinished();
 	//Switch players
 	this.currentPlayer = this.currentPlayer == this.player1 ? this.player2 : this.player1;
-
 	return position;
 };
 
@@ -154,8 +149,6 @@ TicTacToe.prototype.clearBoard = function(){
 	];
 }
 
-
-
 //model
 var model = {
 	game: {},
@@ -168,66 +161,73 @@ var model = {
 
 var controller = {
 	initializeGame: function(){
-		console.log(model.setupGame());
-		console.log("Player1 choose your symbol");
+		model.setupGame();
+		//console.log("Player1 choose your symbol");
 	},
 	setPlayers: function(name, symbol){
 		model.game.setPlayers(name, symbol);
-		console.log("Player1 is: ", model.game.player1.name, model.game.player1.symbol);
-		console.log("Player2 is: ", model.game.player2.name, model.game.player2.symbol);
-		console.log("Current player is: ", model.game.currentPlayer.name, model.game.currentPlayer.symbol);
+		//$(".player1").html(model.game.player1.symbol);
+		document.getElementsByClassName("player1")[0].innerHTML = model.game.player1.symbol;
+		document.getElementsByClassName("computer")[0].innerHTML = model.game.player2.symbol;
+		//console.log("Player1 is: ", model.game.player1.name, model.game.player1.symbol);
+		//console.log("Player2 is: ", model.game.player2.name, model.game.player2.symbol);
+		//console.log("Current player is: ", model.game.currentPlayer.name, model.game.currentPlayer.symbol);
+		document.getElementsByClassName("boxList")[0].style.opacity = 1;
+		document.getElementsByClassName("symbolOptions")[0].style.opacity = 0;
+		//document.getElementById("X").style.opacity = 0;
+		//document.getElementById("O").style.opacity = 0;
 		this.playGame();
 	},
 	playGame: function(){
-		//Need a way to use setTimeout and clearTimeout to implement this function
 		//while the game is not finished continue switching between players and let them select a move
 		if (!model.game.finished){
-			//if the curent player is the computer, then disable the board and let currentPlayer take a turn.
+			//if the curent player is the computer, then disable the board and let computer take a turn
 			if (model.game.currentPlayer.name == "computer"){
 				console.log("It's the computer's turn!");
-				//display that it is the computers turn to take a turn and disable board game
 				var move = model.game.play("computer");
 				console.log("Computer's move was: ", move);
 				//show the computer's move on the screen
 				this.playGame();
 			}
+			//display that it is player1's turn and enable board game
 			else{
 				console.log("It's", model.game.currentPlayer.name, "'s turn!");
-				//this.player1Turn();
-				//display that it is player1's turn and enable board game
-				//wait for player1 to make a turn
 			}
 		}else{
 			this.stopGame();
 		}
-	
 	},
 	stopGame: function(){
+		//Once the game is finished, display who won or if it was a tie. 
 		//if there is no winner, then set the player using the "random" setting
 		console.log("Winner is:", model.game.winner);
 		model.game.clearBoard();
 		this.playGame();
-	},
-		//Once the game is finished, display who won or if it was a tie. 
-		//Change current player to winner, and start game again
-		//if game is reset, then stop game and display option to let player1 choose their symbol
+	},	
 	player1Turn: function(player1, row, col){
 			model.game.play(player, row, col);
 			console.log("Player1's move was: ", row,col);
+			$(".player1").html(model.game.player1.symbol);
 			this.playGame();
 	},
 	resetGame: function(){
-		//clearTimeout
 		model.game.reset();
 		console.log("Player1 choose your symbol");
 	}
 };
 
-//1) initialize game when this script is loaded
+var view = {
+	setUpEventListeners: function(){
+		document.getElementById("X").addEventListener("click", function(){
+				controller.setPlayers("player1", "X");
+		 });
+
+		document.getElementById("O").addEventListener("click", function(){
+				controller.setPlayers("player1", "O");
+		 });
+	}
+};
+
+//initializes the game when this script is loaded
 controller.initializeGame();
-//2) Player 1 chooses whether they want to play as "X" or "O";
-//3) Start game after player 1 chooses their symbol
-//4) Check if player1 goes first or player 2 goes first then 
-//5) Keep letting each player take turns on seelcting a position until someone 
-//wins or the game is finished.
-//6) Automatically start new game
+view.setUpEventListeners();

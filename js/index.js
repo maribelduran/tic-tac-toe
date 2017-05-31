@@ -169,21 +169,23 @@ var controller = {
 		//$(".player1").html(model.game.player1.symbol);
 		document.getElementsByClassName("player1")[0].innerHTML = model.game.player1.symbol;
 		document.getElementsByClassName("computer")[0].innerHTML = model.game.player2.symbol;
-		//console.log("Player1 is: ", model.game.player1.name, model.game.player1.symbol);
-		//console.log("Player2 is: ", model.game.player2.name, model.game.player2.symbol);
-		//console.log("Current player is: ", model.game.currentPlayer.name, model.game.currentPlayer.symbol);
+
 		document.getElementsByClassName("boxList")[0].style.opacity = 1;
-		document.getElementsByClassName("symbolOptions")[0].style.opacity = 0;
+		//document.getElementsByClassName("symbolOptions")[0].style.opacity = 0;
+		 $('.symbolOptions').fadeOut();
 		//document.getElementById("X").style.opacity = 0;
 		//document.getElementById("O").style.opacity = 0;
 		this.playGame();
 	},
-	playGame: function(){
+	playGame: function(move){
+		console.log(move);
 		//while the game is not finished continue switching between players and let them select a move
 		if (!model.game.finished){
 			//if the curent player is the computer, then disable the board and let computer take a turn
 			if (model.game.currentPlayer.name == "computer"){
 				console.log("It's the computer's turn!");
+				document.getElementsByClassName("computersTurn")[0].classList.add('show');
+				document.getElementsByClassName("player1Turn")[0].classList.remove('show');
 				var move = model.game.play("computer");
 				console.log("Computer's move was: ", move);
 				//show the computer's move on the screen
@@ -192,6 +194,8 @@ var controller = {
 			//display that it is player1's turn and enable board game
 			else{
 				console.log("It's", model.game.currentPlayer.name, "'s turn!");
+				document.getElementsByClassName("player1Turn")[0].classList.add('show');
+				document.getElementsByClassName("computersTurn")[0].classList.remove('show');
 			}
 		}else{
 			this.stopGame();
@@ -218,6 +222,32 @@ var controller = {
 
 var view = {
 	setUpEventListeners: function(){
+
+		var btnEntry = {
+			"box0": [0,0],
+			"box1": [0,1],
+			"box2": [0,2],
+			"box3": [1,0],
+			"box4": [1,1],
+			"box5": [1,2],
+			"box6": [2,0],
+			"box7": [2,1],
+			"box8": [2,2],
+		};
+
+		var boxListItems = document.getElementsByTagName("li");
+   		for (var i = 0; i < boxListItems.length; i++) {
+    		boxListItems[i].addEventListener("click", function(){
+    		//controller.playGame(btnEntry[this.classList[0]);
+    		controller.playGame(btnEntry[this.id]);
+        	});
+    	}
+		/*for (var id in btnEntry){
+			document.getElementById(id).addEventListener("click", function(){
+				controller.playGame(btnEntry[this.id]);
+		 	});
+		}
+		*/
 		document.getElementById("X").addEventListener("click", function(){
 				controller.setPlayers("player1", "X");
 		 });

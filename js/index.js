@@ -155,7 +155,6 @@ var model = {
 	setupGame: function(){
 		this.game = new TicTacToe();
 		console.log("Initialized a new TicTacToe game! ")
-		return this.game;
 	}
 };
 
@@ -187,31 +186,36 @@ var controller = {
 				document.getElementsByClassName("computersTurn")[0].classList.add('show');
 				document.getElementsByClassName("player1Turn")[0].classList.remove('show');
 				var move = model.game.play("computer");
-				console.log("Computer's move was: ", move);
+				console.log("Computer's move was: ", move.row, move.col);
+				view.showMove(model.game.player2.symbol, move.row, move.col);
 				//show the computer's move on the screen
 				this.playGame();
-			}
-			//display that it is player1's turn and enable board game
-			else{
+
+				//display that it is player1's turn and enable board game
+			}else{
 				console.log("It's", model.game.currentPlayer.name, "'s turn!");
 				document.getElementsByClassName("player1Turn")[0].classList.add('show');
-				document.getElementsByClassName("computersTurn")[0].classList.remove('show');
+				document.getElementsByClassName("computersTurn")[0].classList.remove('show')
+				//this.player1Turn("player1", move )
 			}
 		}else{
 			this.stopGame();
 		}
+
 	},
 	stopGame: function(){
 		//Once the game is finished, display who won or if it was a tie. 
 		//if there is no winner, then set the player using the "random" setting
 		console.log("Winner is:", model.game.winner);
 		model.game.clearBoard();
-		this.playGame();
+		/*view.clearBoard();*/
+	this.playGame();
 	},	
-	player1Turn: function(player1, row, col){
-			model.game.play(player, row, col);
-			console.log("Player1's move was: ", row,col);
-			$(".player1").html(model.game.player1.symbol);
+	playerTurn: function(row, col){
+			model.game.play(model.game.currentPlayer.name, row, col);
+			console.log("Player's move was: ", row,col);
+			view.showMove(model.game.player1.symbol, row, col);
+			//$(".player1").html(model.game.player1.symbol);
 			this.playGame();
 	},
 	resetGame: function(){
@@ -221,25 +225,24 @@ var controller = {
 };
 
 var view = {
-	setUpEventListeners: function(){
-
-		var btnEntry = {
-			"box0": [0,0],
-			"box1": [0,1],
-			"box2": [0,2],
-			"box3": [1,0],
-			"box4": [1,1],
-			"box5": [1,2],
-			"box6": [2,0],
-			"box7": [2,1],
-			"box8": [2,2],
-		};
+	btnEntry: {
+		"box0": [0,0],
+		"box1": [0,1],
+		"box2": [0,2],
+		"box3": [1,0],
+		"box4": [1,1],
+		"box5": [1,2],
+		"box6": [2,0],
+		"box7": [2,1],
+		"box8": [2,2],
+		},
+		setUpEventListeners: function(){
 
 		var boxListItems = document.getElementsByTagName("li");
    		for (var i = 0; i < boxListItems.length; i++) {
     		boxListItems[i].addEventListener("click", function(){
     		//controller.playGame(btnEntry[this.classList[0]);
-    		controller.playGame(btnEntry[this.id]);
+    		controller.playerTurn(view.btnEntry[this.id][0], view.btnEntry[this.id][1]);
         	});
     	}
 		/*for (var id in btnEntry){
@@ -255,6 +258,30 @@ var view = {
 		document.getElementById("O").addEventListener("click", function(){
 				controller.setPlayers("player1", "O");
 		 });
+	},
+	showMove: function(symbol,row, col){
+
+		var box = "";
+		//console.log(move);
+		//console.log(this.btnEntry)
+
+		for (prop in this.btnEntry){
+			console.log(this.btnEntry[prop][0]);
+			console.log(this.btnEntry[prop][1]);
+			console.log(row)
+			console.log(col)
+			if (this.btnEntry[prop][0] ==  row && this.btnEntry[prop][1] == col){
+				box = prop;
+				break;
+			}
+		}
+		document.getElementById(box).innerHTML = symbol;
+	},
+	clearBoard: function(){
+			var boxListItems = document.getElementsByTagName("li");
+   		for (var i = 0; i < boxListItems.length; i++) {
+    		boxListItems[i].innerHTML = "cleared";
+    	}
 	}
 };
 

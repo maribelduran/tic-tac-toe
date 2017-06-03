@@ -6,7 +6,8 @@ function TicTacToe(){
 	this.player2 = {};
 	this.currentPlayer = null;
 	this.winner = null
-	this.finished = false;
+	this.winnerMove = null;
+	this.finished = false
 	this.board = [
 	[0,0,0],
 	[0,0,0],
@@ -131,6 +132,7 @@ TicTacToe.prototype.reset = function(){
 	this.player2 = {};
 	this.currentPlayer = null;
 	this.winner = null;
+	this.winnerMove = null;
 	this.finished = false;
 	this.board = [
 	[0,0,0],
@@ -142,6 +144,7 @@ TicTacToe.prototype.reset = function(){
 TicTacToe.prototype.clearBoard = function(){
 	this.finished = false;
 	this.winner = null;
+	this.winnerMove = null;
 	this.board = [
 	[0,0,0],
 	[0,0,0],
@@ -154,7 +157,8 @@ var model = {
 	game: {},
 	setupGame: function(){
 		this.game = new TicTacToe();
-		console.log("Initialized a new TicTacToe game! ")
+		//show player symbols options
+		console.log("Initialized a new TicTacToe game!")
 	}
 };
 
@@ -164,93 +168,89 @@ var controller = {
 		//console.log("Player1 choose your symbol");
 	},
 	setPlayers: function(name, symbol){
+		 $('.symbolOptions').fadeOut();
+		 //document.getElementById("X").style.opacity = 0;
+		//document.getElementById("O").style.opacity = 0;
 		model.game.setPlayers(name, symbol);
 		//$(".player1").html(model.game.player1.symbol);
 		document.getElementsByClassName("player1")[0].innerHTML = model.game.player1.symbol;
 		document.getElementsByClassName("computer")[0].innerHTML = model.game.player2.symbol;
-
 		document.getElementsByClassName("boxList")[0].style.opacity = 1;
 		//document.getElementsByClassName("symbolOptions")[0].style.opacity = 0;
-		 $('.symbolOptions').fadeOut();
-		//document.getElementById("X").style.opacity = 0;
-		//document.getElementById("O").style.opacity = 0;
 		this.playGame();
 	},
 	playGame: function(move){
-		console.log(move);
-		//while the game is not finished continue switching between players and let them select a move
 		if (!model.game.finished){
 			//if the curent player is the computer, then disable the board and let computer take a turn
 			if (model.game.currentPlayer.name == "computer"){
+				view.disableBoard();
 				console.log("It's the computer's turn!");
 				document.getElementsByClassName("computersTurn")[0].classList.add('show');
 				document.getElementsByClassName("player1Turn")[0].classList.remove('show');
 				var move = model.game.play("computer");
 				console.log("Computer's move was: ", move.row, move.col);
-				view.showMove(model.game.player2.symbol, move.row, move.col);
-				//show the computer's move on the screen
-				this.playGame();
+				var timeoutID = setTimeout(function (){
+						//show the computer's move on the screen
+						view.showMove(model.game.player2.symbol, move.row, move.col);
+						this.playGame();
+				}.bind(this),1000);
+				
 
-				//display that it is player1's turn and enable board game
 			}else{
 				console.log("It's", model.game.currentPlayer.name, "'s turn!");
+				view.enableBoard();
 				document.getElementsByClassName("player1Turn")[0].classList.add('show');
 				document.getElementsByClassName("computersTurn")[0].classList.remove('show')
-				//this.player1Turn("player1", move )
 			}
 		}else{
-			this.stopGame();
+			this.playNextGame();
 		}
-
 	},
-	stopGame: function(){
+	playNextGame: function(){
 		//Once the game is finished, display who won or if it was a tie. 
 		//if there is no winner, then set the player using the "random" setting
 		console.log("Winner is:", model.game.winner);
+		view.disableBoard();
 		model.game.clearBoard();
-		/*view.clearBoard();*/
-	this.playGame();
+		view.clearBoard();
+		this.playGame();
 	},	
 	playerTurn: function(row, col){
 			model.game.play(model.game.currentPlayer.name, row, col);
-			console.log("Player's move was: ", row,col);
 			view.showMove(model.game.player1.symbol, row, col);
-			//$(".player1").html(model.game.player1.symbol);
 			this.playGame();
 	},
 	resetGame: function(){
+		view.disableBoard();
 		model.game.reset();
-		console.log("Player1 choose your symbol");
 	}
 };
 
 var view = {
+	boardEnabled: false,
 	btnEntry: {
-		"box0": [0,0],
-		"box1": [0,1],
-		"box2": [0,2],
-		"box3": [1,0],
-		"box4": [1,1],
-		"box5": [1,2],
-		"box6": [2,0],
-		"box7": [2,1],
-		"box8": [2,2],
+		"0": [0,0],
+		"1": [0,1],
+		"2": [0,2],
+		"3": [1,0],
+		"4": [1,1],
+		"5": [1,2],
+		"6": [2,0],
+		"7": [2,1],
+		"8": [2,2],
 		},
 		setUpEventListeners: function(){
 
-		var boxListItems = document.getElementsByTagName("li");
-   		for (var i = 0; i < boxListItems.length; i++) {
-    		boxListItems[i].addEventListener("click", function(){
-    		//controller.playGame(btnEntry[this.classList[0]);
-    		controller.playerTurn(view.btnEntry[this.id][0], view.btnEntry[this.id][1]);
-        	});
+		var boxList = document.querySelector("ul");
+
+		boxList.addEventListener('click', function(event){
+			if (view.boardEnabled){
+				var boxClicked = event.target;
+				var boxClickedVal = boxClicked.className
+				controller.playerTurn(view.btnEntry[boxClickedVal][0], view.btnEntry[boxClickedVal][1]);
     	}
-		/*for (var id in btnEntry){
-			document.getElementById(id).addEventListener("click", function(){
-				controller.playGame(btnEntry[this.id]);
-		 	});
-		}
-		*/
+		});
+		
 		document.getElementById("X").addEventListener("click", function(){
 				controller.setPlayers("player1", "X");
 		 });
@@ -259,28 +259,30 @@ var view = {
 				controller.setPlayers("player1", "O");
 		 });
 	},
-	showMove: function(symbol,row, col){
+	enableBoard: function(){
+		this.boardEnabled = true;
+	},
+	disableBoard: function(){
+		this.boardEnabled = false;
+	},
 
+
+	showMove: function(symbol,row, col){
 		var box = "";
-		//console.log(move);
-		//console.log(this.btnEntry)
 
 		for (prop in this.btnEntry){
-			console.log(this.btnEntry[prop][0]);
-			console.log(this.btnEntry[prop][1]);
-			console.log(row)
-			console.log(col)
 			if (this.btnEntry[prop][0] ==  row && this.btnEntry[prop][1] == col){
 				box = prop;
+				console.log(prop);
 				break;
 			}
 		}
-		document.getElementById(box).innerHTML = symbol;
+		document.getElementsByClassName(box)[0].innerHTML = symbol;
 	},
 	clearBoard: function(){
 			var boxListItems = document.getElementsByTagName("li");
    		for (var i = 0; i < boxListItems.length; i++) {
-    		boxListItems[i].innerHTML = "cleared";
+    		boxListItems[i].innerHTML = "";
     	}
 	}
 };

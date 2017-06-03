@@ -203,14 +203,14 @@ var controller = {
 				document.getElementsByClassName("computersTurn")[0].classList.remove('show')
 			}
 		}else{
-			this.playNextGame();
+			//Once the game is finished, disable board and display who won or if it was a tie. 
+			view.disableBoard();
+			this.showWinnerAndReplay();
 		}
 	},
-	playNextGame: function(){
-		//Once the game is finished, display who won or if it was a tie. 
-		//if there is no winner, then set the player using the "random" setting
-		console.log("Winner is:", model.game.winner);
-		view.disableBoard();
+	//shows winner and start new game round
+	showWinnerAndReplay: function(){
+		view.showWinner(model.game.winner);
 		model.game.clearBoard();
 		view.clearBoard();
 		this.playGame();
@@ -250,7 +250,7 @@ var view = {
 				controller.playerTurn(view.btnEntry[boxClickedVal][0], view.btnEntry[boxClickedVal][1]);
     	}
 		});
-		
+
 		document.getElementById("X").addEventListener("click", function(){
 				controller.setPlayers("player1", "X");
 		 });
@@ -284,7 +284,21 @@ var view = {
    		for (var i = 0; i < boxListItems.length; i++) {
     		boxListItems[i].innerHTML = "";
     	}
+	},
+	showWinner: function(winner){
+		var message = ""
+		if (winner.name == "player1"){
+				message	= "You Won :)"
+		}
+		else if (winner.name == "computer"){
+			message = "You lost this time :("
+		}
+		else {
+			message = "It was a tie..."
+		}
+		document.getElementById("winner_name").textContent = message;
 	}
+
 };
 
 //initializes the game when this script is loaded

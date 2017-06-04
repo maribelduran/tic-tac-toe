@@ -165,18 +165,13 @@ var model = {
 var controller = {
 	initializeGame: function(){
 		model.setupGame();
-		//console.log("Player1 choose your symbol");
 	},
 	setPlayers: function(name, symbol){
-		 $('.symbolOptions').fadeOut();
-		 //document.getElementById("X").style.opacity = 0;
-		//document.getElementById("O").style.opacity = 0;
+		view.hidePlayerOptions();
 		model.game.setPlayers(name, symbol);
-		//$(".player1").html(model.game.player1.symbol);
-		document.getElementsByClassName("player1")[0].innerHTML = model.game.player1.symbol;
-		document.getElementsByClassName("computer")[0].innerHTML = model.game.player2.symbol;
-		document.getElementsByClassName("boxList")[0].style.opacity = 1;
-		//document.getElementsByClassName("symbolOptions")[0].style.opacity = 0;
+		
+		view.showPlayers(model.game.player1, model.game.player2);
+		view.showBoard();
 		this.playGame();
 	},
 	playGame: function(move){
@@ -223,6 +218,8 @@ var controller = {
 	resetGame: function(){
 		view.disableBoard();
 		model.game.reset();
+		model.clearBoard();
+		model.setPlayers();
 	}
 };
 
@@ -284,6 +281,21 @@ var view = {
    		for (var i = 0; i < boxListItems.length; i++) {
     		boxListItems[i].innerHTML = "";
     	}
+	},
+	showBoard: function(){
+		document.getElementsByClassName("boxList")[0].style.opacity = 1;
+	},
+	showPlayers: function(player1, player2){
+		//$(".player1").html(model.game.player1.symbol);
+		document.getElementsByClassName("player1")[0].innerHTML = model.game.player1.name + ": " + model.game.player1.score;
+		document.getElementsByClassName("computer")[0].innerHTML = model.game.player2.name + ": " + model.game.player2.score;
+		//document.getElementsByClassName("symbolOptions")[0].style.opacity = 0;
+	},
+	hidePlayerOptions: function(){
+		 $('.symbolOptions').fadeOut();
+		 //document.getElementById("X").style.opacity = 0;
+		//document.getElementById("O").style.opacity = 0;
+
 	},
 	showWinner: function(winner){
 		var message = ""

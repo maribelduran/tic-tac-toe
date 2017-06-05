@@ -43,19 +43,27 @@ function flipCoin(min, max){
  	return Math.floor(Math.random() * (max - min)) + min;
 }
 
+//returns a succesful move or null
 TicTacToe.prototype.play = function(player, row, col){
+
+	var position = {
+		"row": 0,
+		"col": 0
+	}
 	//place symbol
 	if (player == "computer"){
-		var position = this.getMove();
+		position = this.getMove();
 		this.board[position.row][position.col] = this.player2.symbol;
 	}
 	else{
 		this.board[row][col] = this.player1.symbol;
+		position.row = row;
+		position.col = col;
+
 	}
 	//check if there is a winner	
 	var isWinner = this.checkWinner();	
 	if (isWinner){
-		console.log("found a winner!");
 		this.currentPlayer.score +=1;
 		this.winner = this.currentPlayer;
 		this.setCurrentPlayer(this.winner);
@@ -188,7 +196,7 @@ var controller = {
 						//show the computer's move on the screen
 						view.showMove(model.game.player2.symbol, move.row, move.col);
 						this.playGame();
-				}.bind(this),1000);
+				}.bind(this),500);
 				
 
 			}else{
@@ -205,15 +213,22 @@ var controller = {
 	},
 	//shows winner and start new game round
 	showWinnerAndReplay: function(){
-		view.showWinner(model.game.winner);
-		model.game.clearBoard();
-		view.clearBoard();
-		this.playGame();
+		var timeoutID = setTimeout(function (){
+			view.showWinner(model.game.winner);
+			model.game.clearBoard();
+			view.clearBoard();
+			this.playGame();
+			}.bind(this),500);
+
+		
 	},	
 	playerTurn: function(row, col){
-			model.game.play(model.game.currentPlayer.name, row, col);
-			view.showMove(model.game.player1.symbol, row, col);
-			this.playGame();
+		var move = model.game.play(model.game.currentPlayer.name, row, col);
+		console.log("Players's move was: ", move.row, move.col);
+		//show the computer's move on the screen
+		view.showMove(model.game.player1.symbol, move.row, move.col);
+		this.playGame();
+					
 	},
 	resetGame: function(){
 		view.disableBoard();

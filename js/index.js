@@ -47,19 +47,24 @@ function flipCoin(min, max){
 TicTacToe.prototype.play = function(player, row, col){
 
 	var position = {
-		"row": 0,
-		"col": 0
 	}
+
 	//place symbol
 	if (player == "computer"){
 		position = this.getMove();
 		this.board[position.row][position.col] = this.player2.symbol;
 	}
 	else{
-		this.board[row][col] = this.player1.symbol;
-		position.row = row;
-		position.col = col;
-
+		//if position hasn't already been taken then set the position to the player's symbol
+		if (!this.positionFilled(row,col)){
+			this.board[row][col] = this.player1.symbol;
+			position.row = row;
+			position.col = col;
+			//return an empty position to represent that the move was not available
+		}else{
+			return position;
+		}
+		
 	}
 	//check if there is a winner	
 	var isWinner = this.checkWinner();	
@@ -133,6 +138,16 @@ TicTacToe.prototype.getMove = function(){
 	//if position is already taken you can't use it
 	return position;
 }
+
+//returns boolean reperesenting whether the position in the board has been filled
+TicTacToe.prototype.positionFilled = function(row,col){
+	//if the position is empty return false
+	if (this.board[row][col] == 0){
+		return false;
+	}
+	return true;
+}
+
 
 TicTacToe.prototype.reset = function(){
 	//clear all properties
@@ -219,14 +234,19 @@ var controller = {
 			view.clearBoard();
 			this.playGame();
 			}.bind(this),500);
-
 		
 	},	
 	playerTurn: function(row, col){
 		var move = model.game.play(model.game.currentPlayer.name, row, col);
-		console.log("Players's move was: ", move.row, move.col);
-		//show the computer's move on the screen
-		view.showMove(model.game.player1.symbol, move.row, move.col);
+		if (Object.keys(move).length !== 0){
+			console.log("Players's move was: ", move.row, move.col);
+			//show the computer's move on the screen
+			view.showMove(model.game.player1.symbol, move.row, move.col);
+		}	
+		else{
+			console.log("Move is already taken! Try again.");
+		}
+
 		this.playGame();
 					
 	},

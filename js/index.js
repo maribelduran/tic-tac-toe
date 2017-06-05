@@ -1,4 +1,5 @@
 //http://javascript.info/settimeout-setinterval
+//http://neverstopbuilding.com/minimax
 const MAX_PLAYERS = 2;
 
 function TicTacToe(){
@@ -46,8 +47,7 @@ function flipCoin(min, max){
 //returns a succesful move or null
 TicTacToe.prototype.play = function(player, row, col){
 
-	var position = {
-	}
+	var position = {};
 
 	//place symbol
 	if (player == "computer"){
@@ -89,6 +89,8 @@ TicTacToe.prototype.checkWinner = function(){
 	 for (row=0; row<=2; row++){
 	 		if (this.board[row][col] === this.board[row][col+ 1] && this.board[row][col] != 0){
 	 			if (this.board[row][col+1] === this.board[row][col+ 2]){
+	 				this.winnerMove = [[row,col],[row,col+1], [row,col+2]];
+	 				console.log(this.winnerMove);
 	 				return true;
         }
       }
@@ -97,6 +99,7 @@ TicTacToe.prototype.checkWinner = function(){
   for (col=0, row=0; col<=2; col++){
   	if (this.board[row][col] === this.board[row+1][col] && this.board[row][col]!= 0){
   		if (this.board[row+1][col] === this.board[row+2][col]){
+  			this.winnerMove = [[row,col],[row+1,col], [row+2,col]];
 	 				return true;
         }
    }
@@ -105,6 +108,7 @@ TicTacToe.prototype.checkWinner = function(){
  	//checks if there is a diagonal line of 3 of one's own symbol
   	if (this.board[row][col] === this.board[row+1][col+1] && this.board[row][col]!= 0){
   		if (this.board[row+1][col+1] === this.board[row+2][col+2]){
+  			this.winnerMove = [[row,col],[row+1,col+1], [row+2,col+2]];
 	 				return true;
         }
    }
@@ -113,6 +117,7 @@ TicTacToe.prototype.checkWinner = function(){
  	//checks if there is a diagonal line of 3 of one's own symbol
  	if (this.board[row+2][col] === this.board[row+1][col+1] && this.board[row+2][col]!=0){
  		if (this.board[row+1][col+1] == this.board[row][col+2]){
+ 			this.winnerMove = [[row+2,col],[row+1,col+1], [row,col+2]];
    		return true;
    	}
   }
@@ -203,9 +208,8 @@ var controller = {
 			if (model.game.currentPlayer.name == "computer"){
 				view.disableBoard();
 				console.log("It's the computer's turn!");
-				document.getElementsByClassName("computersTurn")[0].classList.add('show');
-				document.getElementsByClassName("player1Turn")[0].classList.remove('show');
-				var move = model.game.play("computer");
+				view.showTurn(model.game.currentPlayer);
+				var move = model.game.play(model.game.currentPlayer.name);
 				console.log("Computer's move was: ", move.row, move.col);
 				var timeoutID = setTimeout(function (){
 						//show the computer's move on the screen
@@ -217,8 +221,7 @@ var controller = {
 			}else{
 				console.log("It's", model.game.currentPlayer.name, "'s turn!");
 				view.enableBoard();
-				document.getElementsByClassName("player1Turn")[0].classList.add('show');
-				document.getElementsByClassName("computersTurn")[0].classList.remove('show')
+				view.showTurn(model.game.currentPlayer);
 			}
 		}else{
 			//Once the game is finished, disable board and display who won or if it was a tie. 
@@ -331,6 +334,16 @@ var view = {
 		 //document.getElementById("X").style.opacity = 0;
 		//document.getElementById("O").style.opacity = 0;
 
+	},
+	showTurn: function(player){
+		if (player.name == "computer"){
+			document.getElementsByClassName("computersTurn")[0].classList.add('show');
+			document.getElementsByClassName("player1Turn")[0].classList.remove('show');
+		}
+		else{
+				document.getElementsByClassName("player1Turn")[0].classList.add('show');
+				document.getElementsByClassName("computersTurn")[0].classList.remove('show')
+		}			
 	},
 	showWinner: function(winner){
 		var message = ""

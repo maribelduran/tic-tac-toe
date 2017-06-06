@@ -7,7 +7,7 @@ function TicTacToe(){
 	this.player2 = {};
 	this.currentPlayer = null;
 	this.winner = null
-	this.winnerMove = null;
+	this.winningMoves = null;
 	this.finished = false
 	this.board = [
 	[0,0,0],
@@ -89,8 +89,7 @@ TicTacToe.prototype.checkWinner = function(){
 	 for (row=0; row<=2; row++){
 	 		if (this.board[row][col] === this.board[row][col+ 1] && this.board[row][col] != 0){
 	 			if (this.board[row][col+1] === this.board[row][col+ 2]){
-	 				this.winnerMove = [[row,col],[row,col+1], [row,col+2]];
-	 				console.log(this.winnerMove);
+	 				this.winningMoves = [[row,col],[row,col+1], [row,col+2]];
 	 				return true;
         }
       }
@@ -99,7 +98,7 @@ TicTacToe.prototype.checkWinner = function(){
   for (col=0, row=0; col<=2; col++){
   	if (this.board[row][col] === this.board[row+1][col] && this.board[row][col]!= 0){
   		if (this.board[row+1][col] === this.board[row+2][col]){
-  			this.winnerMove = [[row,col],[row+1,col], [row+2,col]];
+  			this.winningMoves= [[row,col],[row+1,col], [row+2,col]];
 	 				return true;
         }
    }
@@ -108,7 +107,7 @@ TicTacToe.prototype.checkWinner = function(){
  	//checks if there is a diagonal line of 3 of one's own symbol
   	if (this.board[row][col] === this.board[row+1][col+1] && this.board[row][col]!= 0){
   		if (this.board[row+1][col+1] === this.board[row+2][col+2]){
-  			this.winnerMove = [[row,col],[row+1,col+1], [row+2,col+2]];
+  			this.winningMoves = [[row,col],[row+1,col+1],[row+2,col+2]];
 	 				return true;
         }
    }
@@ -117,7 +116,7 @@ TicTacToe.prototype.checkWinner = function(){
  	//checks if there is a diagonal line of 3 of one's own symbol
  	if (this.board[row+2][col] === this.board[row+1][col+1] && this.board[row+2][col]!=0){
  		if (this.board[row+1][col+1] == this.board[row][col+2]){
- 			this.winnerMove = [[row+2,col],[row+1,col+1], [row,col+2]];
+ 			this.winningMoves= [[row+2,col],[row+1,col+1], [row,col+2]];
    		return true;
    	}
   }
@@ -232,17 +231,20 @@ var controller = {
 	//shows winner and start new game round
 	showWinnerAndReplay: function(){
 		var timeoutID = setTimeout(function (){
+			view.showWinningMove(model.game.winningMoves);
 			view.showWinner(model.game.winner);
+			view.showPlayers(model.game.player1, model.game.player2);
+			},500);
+
+		 setTimeout(function (){
 			model.game.clearBoard();
 			view.clearBoard();
 			this.playGame();
-			}.bind(this),500);
-		
+			}.bind(this),1000);
 	},	
 	playerTurn: function(row, col){
 		var move = model.game.play(model.game.currentPlayer.name, row, col);
 		if (Object.keys(move).length !== 0){
-			console.log("Players's move was: ", move.row, move.col);
 			//show the computer's move on the screen
 			view.showMove(model.game.player1.symbol, move.row, move.col);
 		}	
@@ -264,15 +266,15 @@ var controller = {
 var view = {
 	boardEnabled: false,
 	btnEntry: {
-		"0": [0,0],
-		"1": [0,1],
-		"2": [0,2],
-		"3": [1,0],
-		"4": [1,1],
-		"5": [1,2],
-		"6": [2,0],
-		"7": [2,1],
-		"8": [2,2],
+		"box0": [0,0],
+		"box1": [0,1],
+		"box2": [0,2],
+		"box3": [1,0],
+		"box4": [1,1],
+		"box5": [1,2],
+		"box6": [2,0],
+		"box7": [2,1],
+		"box8": [2,2],
 		},
 		setUpEventListeners: function(){
 
@@ -281,8 +283,9 @@ var view = {
 		boxList.addEventListener('click', function(event){
 			if (view.boardEnabled){
 				var boxClicked = event.target;
-				var boxClickedVal = boxClicked.className
-				controller.playerTurn(view.btnEntry[boxClickedVal][0], view.btnEntry[boxClickedVal][1]);
+				//var boxClickedVal = boxClicked.className
+				//console.log(boxClickedVal);
+				controller.playerTurn(view.btnEntry[boxClicked.id][0], view.btnEntry[boxClicked.id][1]);
     	}
 		});
 
@@ -308,11 +311,11 @@ var view = {
 		for (prop in this.btnEntry){
 			if (this.btnEntry[prop][0] ==  row && this.btnEntry[prop][1] == col){
 				box = prop;
-				console.log(prop);
+				
 				break;
 			}
 		}
-		document.getElementsByClassName(box)[0].innerHTML = symbol;
+		document.getElementById(box).innerHTML = symbol;
 	},
 	clearBoard: function(){
 			var boxListItems = document.getElementsByTagName("li");
@@ -345,6 +348,24 @@ var view = {
 				document.getElementsByClassName("computersTurn")[0].classList.remove('show')
 		}			
 	},
+	showWinningMove: function(winningMove){
+		var box=[];
+		for (var i=0; i<winningMove.length;i++){
+			for (prop in this.btnEntry){
+				if (this.btnEntry[prop][0] ==  winningMove[i][0] && this.btnEntry[prop][1] == winningMove[i][1]){
+					box.push(prop);
+					document.getElementById(prop).classList.add('winningBox');
+					break;
+				}
+			}
+		}
+		var timeoutID = setTimeout(function (){
+			box.forEach(function(id){
+				document.getElementById(id).classList.remove('winningBox');
+			});
+		},1000);
+
+	},	
 	showWinner: function(winner){
 		var message = ""
 		if (winner.name == "player1"){

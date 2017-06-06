@@ -196,9 +196,8 @@ var controller = {
 	setPlayers: function(name, symbol){
 		view.hidePlayerOptions();
 		model.game.setPlayers(name, symbol);
-		
-		view.showPlayers(model.game.player1, model.game.player2);
 		view.showBoard();
+		view.showPlayers(model.game.player1, model.game.player2);
 		this.playGame();
 	},
 	playGame: function(move){
@@ -228,6 +227,13 @@ var controller = {
 			this.showWinnerAndReplay();
 		}
 	},
+	resetAll: function(){
+		model.game.reset();
+		view.disableBoard();
+		view.hideBoard();
+		view.hidePlayers();
+		view.showPlayerOptions();
+	},
 	//shows winner and start new game round
 	showWinnerAndReplay: function(){
 		var timeoutID = setTimeout(function (){
@@ -254,12 +260,6 @@ var controller = {
 
 		this.playGame();
 					
-	},
-	resetGame: function(){
-		view.disableBoard();
-		model.game.reset();
-		model.clearBoard();
-		model.setPlayers();
 	}
 };
 
@@ -296,6 +296,11 @@ var view = {
 		document.getElementById("O").addEventListener("click", function(){
 				controller.setPlayers("player1", "O");
 		 });
+
+		document.getElementById("reset").addEventListener("click", function(){
+			controller.resetAll();
+		});
+
 	},
 	enableBoard: function(){
 		this.boardEnabled = true;
@@ -303,8 +308,6 @@ var view = {
 	disableBoard: function(){
 		this.boardEnabled = false;
 	},
-
-
 	showMove: function(symbol,row, col){
 		var box = "";
 
@@ -326,18 +329,28 @@ var view = {
 	showBoard: function(){
 		document.getElementsByClassName("boxList")[0].style.opacity = 1;
 	},
+	hideBoard: function(){
+		document.getElementsByClassName("boxList")[0].style.opacity = 0;
+	},
 	showPlayers: function(player1, player2){
-		//$(".player1").html(model.game.player1.symbol);
+			document.getElementsByClassName("players")[0].style.opacity = 1;
 		document.getElementsByClassName("player1")[0].innerHTML = model.game.player1.name + ": " + model.game.player1.score;
 		document.getElementsByClassName("computer")[0].innerHTML = model.game.player2.name + ": " + model.game.player2.score;
 		//document.getElementsByClassName("symbolOptions")[0].style.opacity = 0;
 	},
+	hidePlayers: function(){
+		document.getElementsByClassName("players")[0].style.opacity = 0;
+	},
 	hidePlayerOptions: function(){
-		 $('.symbolOptions').fadeOut();
+		 	document.getElementsByClassName("symbolOptions")[0].style.display = "none";
 		 //document.getElementById("X").style.opacity = 0;
 		//document.getElementById("O").style.opacity = 0;
-
 	},
+	showPlayerOptions: function(){
+		console.log("Hello");
+		document.getElementsByClassName("symbolOptions")[0].style.display = "block";
+	},
+
 	showTurn: function(player){
 		if (player.name == "computer"){
 			document.getElementsByClassName("computersTurn")[0].classList.add('show');

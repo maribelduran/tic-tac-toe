@@ -64,7 +64,6 @@ TicTacToe.prototype.play = function(player, row, col){
 		}else{
 			return position;
 		}
-		
 	}
 	//check if there is a winner	
 	var isWinner = this.checkWinner();	
@@ -75,7 +74,6 @@ TicTacToe.prototype.play = function(player, row, col){
 		//need to save the position that won the game to show 
 		this.finished = true;
 		return position;
-
 	}
 	this.finished = this.isGameFinished();
 	//Switch players
@@ -152,20 +150,12 @@ TicTacToe.prototype.positionFilled = function(row,col){
 	return true;
 }
 
-
 TicTacToe.prototype.reset = function(){
 	//clear all properties
 	this.player1 = {};
 	this.player2 = {};
 	this.currentPlayer = null;
-	this.winner = null;
-	this.winnerMove = null;
-	this.finished = false;
-	this.board = [
-	[0,0,0],
-	[0,0,0],
-	[0,0,0]
-	];
+	this.clearBoard();
 }
 
 TicTacToe.prototype.clearBoard = function(){
@@ -230,6 +220,7 @@ var controller = {
 	resetAll: function(){
 		model.game.reset();
 		view.disableBoard();
+		view.clearBoard();
 		view.hideBoard();
 		view.hidePlayers();
 		view.showPlayerOptions();
@@ -257,9 +248,7 @@ var controller = {
 		else{
 			console.log("Move is already taken! Try again.");
 		}
-
-		this.playGame();
-					
+		this.playGame();				
 	}
 };
 
@@ -300,7 +289,6 @@ var view = {
 		document.getElementById("reset").addEventListener("click", function(){
 			controller.resetAll();
 		});
-
 	},
 	enableBoard: function(){
 		this.boardEnabled = true;
@@ -333,7 +321,7 @@ var view = {
 		document.getElementsByClassName("boxList")[0].style.opacity = 0;
 	},
 	showPlayers: function(player1, player2){
-			document.getElementsByClassName("players")[0].style.opacity = 1;
+		document.getElementsByClassName("players")[0].style.opacity = 1;
 		document.getElementsByClassName("player1")[0].innerHTML = model.game.player1.name + ": " + model.game.player1.score;
 		document.getElementsByClassName("computer")[0].innerHTML = model.game.player2.name + ": " + model.game.player2.score;
 		//document.getElementsByClassName("symbolOptions")[0].style.opacity = 0;
@@ -390,9 +378,12 @@ var view = {
 		else {
 			message = "It was a tie..."
 		}
+		document.getElementById("winner_name").style.opacity = 1;
 		document.getElementById("winner_name").textContent = message;
+		setTimeout(function (){
+			document.getElementById("winner_name").style.opacity = 0;
+		},500);
 	}
-
 };
 
 //initializes the game when this script is loaded

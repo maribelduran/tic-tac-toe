@@ -208,6 +208,7 @@ TicTacToe.prototype.minimax = function(board, depth, isMaximizingPlayer){
 				if (this.board[row][col] === 0){
 					this.board[row][col] = this.currentPlayer.symbol;
 					bestVal = Math.min(bestVal, this.minimax(board, depth+1, !isMaximizingPlayer));
+					this.board[row][col] = 0;
 				}
 			}
 		}

@@ -174,9 +174,45 @@ TicTacToe.prototype.getBestMove = function(){
 }
 
 TicTacToe.prototype.minimax = function(board, depth, isMaximizingPlayer){
-	
+	//if board is in terminal state, then return value of board
+	var score = this.checkWinner();
+
+	//If Maximizer or Minimizer has won the game return player's score
+	if (score == 10 || score == -10){
+		return score;
+	}
+
+	//If there are no more moves and no winner then it is a tie
+	if (this.isGameFinished()){
 		return 0;
-	
+	}
+
+	//Maximizer's move
+	if (isMaximizingPlayer){
+		var bestVal = -Infinity;
+		for (var row=0; row<3; row++){
+			for (var col=0; col<3; col++){
+				if (this.board[row][col] === 0){
+					this.board[row][col] = this.currentPlayer.symbol;
+					bestVal = Math.max(bestVal, this.minimax(board, depth+1, !isMaximizingPlayer));
+					this.board[row][col] = 0;
+				}
+			}
+		}
+		return bestVal;
+	//Minimizer's move
+	}else{
+		var bestVal = Infinity;
+		for (var row=0; row<3; row++){
+			for (var col=0; col<3; col++){
+				if (this.board[row][col] === 0){
+					this.board[row][col] = this.currentPlayer.symbol;
+					bestVal = Math.min(bestVal, this.minimax(board, depth+1, !isMaximizingPlayer));
+				}
+			}
+		}
+		return 0;
+	}
 }
 
 //returns boolean reperesenting whether the position in the board has been filled

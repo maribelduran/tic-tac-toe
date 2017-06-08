@@ -1,5 +1,6 @@
 //http://javascript.info/settimeout-setinterval
-//http://neverstopbuilding.com/minimax
+//http://www.geeksforgeeks.org/minimax-algorithm-in-game-theory-set-3-tic-tac-toe-ai-finding-optimal-move/
+
 const MAX_PLAYERS = 2;
 
 function TicTacToe(){
@@ -46,13 +47,12 @@ function flipCoin(min, max){
 
 //returns a succesful move or null
 TicTacToe.prototype.play = function(player, row, col){
-
 	var position = {};
-
 	//place symbol
 	if (player == "computer"){
-		position = this.getMove();
+		position = this.getBestMove();
 		this.board[position.row][position.col] = this.player2.symbol;
+		console.log(position);
 	}
 	else{
 		//if position hasn't already been taken then set the position to the player's symbol
@@ -88,7 +88,11 @@ TicTacToe.prototype.checkWinner = function(){
 	 		if (this.board[row][col] === this.board[row][col+ 1] && this.board[row][col] != 0){
 	 			if (this.board[row][col+1] === this.board[row][col+ 2]){
 	 				this.winningMoves = [[row,col],[row,col+1], [row,col+2]];
-	 				return true;
+	 				if (this.board[row][col] == this.currentPlayer.symbol){
+	 					return 10;
+	 				}else{
+	 					return -10;
+	 				}
         }
       }
   }
@@ -97,28 +101,39 @@ TicTacToe.prototype.checkWinner = function(){
   	if (this.board[row][col] === this.board[row+1][col] && this.board[row][col]!= 0){
   		if (this.board[row+1][col] === this.board[row+2][col]){
   			this.winningMoves= [[row,col],[row+1,col], [row+2,col]];
-	 				return true;
-        }
+	 			if (this.board[row][col] == this.currentPlayer.symbol){
+	 					return 10;
+	 			}
+	 			return -10;
+	 		}
+     }
    }
- 	}
+
  	col=0, row=0;
  	//checks if there is a diagonal line of 3 of one's own symbol
-  	if (this.board[row][col] === this.board[row+1][col+1] && this.board[row][col]!= 0){
-  		if (this.board[row+1][col+1] === this.board[row+2][col+2]){
-  			this.winningMoves = [[row,col],[row+1,col+1],[row+2,col+2]];
-	 				return true;
-        }
+  if (this.board[row][col] === this.board[row+1][col+1] && this.board[row][col]!= 0){
+  	if (this.board[row+1][col+1] === this.board[row+2][col+2]){
+  		this.winningMoves = [[row,col],[row+1,col+1],[row+2,col+2]];
+	 		if (this.board[row][col] == this.currentPlayer.symbol){
+	 			return 10;
+	 		}
+	 		return -10;
+	 	}
    }
+	
 	col=0, row=0;
-
  	//checks if there is a diagonal line of 3 of one's own symbol
  	if (this.board[row+2][col] === this.board[row+1][col+1] && this.board[row+2][col]!=0){
  		if (this.board[row+1][col+1] == this.board[row][col+2]){
  			this.winningMoves= [[row+2,col],[row+1,col+1], [row,col+2]];
-   		return true;
+   		if (this.board[row+2][col] == this.currentPlayer.symbol){
+	 			return 10;
+	 		}
+	 		return -10
    	}
   }
-	return false;
+	
+	return 0;
 }
 
 TicTacToe.prototype.isGameFinished = function(){
@@ -131,14 +146,37 @@ TicTacToe.prototype.isGameFinished = function(){
 	return true;
 }
 
-//returns an array that represents the row and column position
-TicTacToe.prototype.getMove = function(){
-	var position = {
-		"row": 0,
-		"col": 0
+//returns an array that represents a cell in the board
+TicTacToe.prototype.getBestMove = function(){
+	var bestMove = {
+		"row": -1,
+		"col": -1,
+		"val": -1000,
+	};
+	for (var row=0; row<3; row++){
+		for (var col=0; col<3; col++){
+			//check that cell is empty
+			if (this.board[row][col] === 0){
+				//make the move and call minimax
+				this.board[row][col] = this.currentPlayer.symbol;
+				var currentMoveVal = this.minimax(this.board, 0, true);
+				//undo the move
+				this.board[row][col] = 0;
+				if (currentMoveVal > bestMove.val){
+					bestMove.row = row;
+					bestMove.col = col;
+					bestMove.val = currentMoveVal;
+				}
+			}
+		}
 	}
-	//if position is already taken you can't use it
-	return position;
+	return bestMove;
+}
+
+TicTacToe.prototype.minimax = function(board, depth, isMaximizingPlayer){
+	
+		return 0;
+	
 }
 
 //returns boolean reperesenting whether the position in the board has been filled
@@ -155,7 +193,6 @@ TicTacToe.prototype.reset = function(){
 	this.player1 = {};
 	this.player2 = {};
 	this.currentPlayer = null;
-	this.clearBoard();
 }
 
 TicTacToe.prototype.clearBoard = function(){
@@ -283,7 +320,7 @@ var view = {
     		}
 		});
 
-		boxList.addEventListener('mouseover', function(event){
+	/*	boxList.addEventListener('mouseover', function(event){
 			if (view.boardEnabled){
 				var boxClicked = event.target;
 				controller.checkMove(view.btnEntry[boxClicked.id][0], view.btnEntry[boxClicked.id][1]);
@@ -295,6 +332,7 @@ var view = {
 				view.hideMove(view.btnEntry[boxClicked.id][0], view.btnEntry[boxClicked.id][1]);
     		}
 		});
+		*/
 
 		document.getElementById("X").addEventListener("click", function(){
 				controller.setPlayers("player1", "X");

@@ -243,12 +243,17 @@ var controller = {
 		var move = model.game.play(model.game.currentPlayer.name, row, col);
 		if (Object.keys(move).length !== 0){
 			//show the computer's move on the screen
-			view.showMove(model.game.player1.symbol, move.row, move.col);
+			view.showMove(model.game.player1.symbol, move.row, move.col, true);
 		}	
 		else{
 			console.log("Move is already taken! Try again.");
 		}
 		this.playGame();				
+	},
+	checkMove: function(row,col){
+		if (!model.game.positionFilled(row,col)){
+			view.showMove(model.game.currentPlayer.symbol, row, col, false);
+		}
 	}
 };
 
@@ -275,7 +280,20 @@ var view = {
 				//var boxClickedVal = boxClicked.className
 				//console.log(boxClickedVal);
 				controller.playerTurn(view.btnEntry[boxClicked.id][0], view.btnEntry[boxClicked.id][1]);
-    	}
+    		}
+		});
+
+		boxList.addEventListener('mouseover', function(event){
+			if (view.boardEnabled){
+				var boxClicked = event.target;
+				controller.checkMove(view.btnEntry[boxClicked.id][0], view.btnEntry[boxClicked.id][1]);
+    		}
+		});
+		boxList.addEventListener('mouseleave', function(event){
+			if (view.boardEnabled){
+				var boxClicked = event.target;
+				view.hideMove(view.btnEntry[boxClicked.id][0], view.btnEntry[boxClicked.id][1]);
+    		}
 		});
 
 		document.getElementById("X").addEventListener("click", function(){
@@ -289,6 +307,8 @@ var view = {
 		document.getElementById("reset").addEventListener("click", function(){
 			controller.resetAll();
 		});
+
+
 	},
 	enableBoard: function(){
 		this.boardEnabled = true;
@@ -296,7 +316,7 @@ var view = {
 	disableBoard: function(){
 		this.boardEnabled = false;
 	},
-	showMove: function(symbol,row, col){
+	showMove: function(symbol,row, col, isClicked){
 		var box = "";
 
 		for (prop in this.btnEntry){
@@ -307,6 +327,25 @@ var view = {
 			}
 		}
 		document.getElementById(box).innerHTML = symbol;
+		if (isClicked){
+			document.getElementById(box).style.opacity = 1;
+		}
+		else{
+			document.getElementById(box).style.opacity = 0.5;
+		}
+	},
+	hideMove: function(col,row){
+		var box = "";
+
+		for (prop in this.btnEntry){
+			if (this.btnEntry[prop][0] ==  row && this.btnEntry[prop][1] == col){
+				box = prop;
+				
+				break;
+			}
+		}
+		document.getElementById(box).style.opacity = 1;
+		document.getElementById(box).innerHTML = "";
 	},
 	clearBoard: function(){
 			var boxListItems = document.getElementsByTagName("li");

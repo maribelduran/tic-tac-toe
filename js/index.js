@@ -259,9 +259,11 @@ var controller = {
 	},
 	setPlayers: function(name, symbol){
 		model.game.setPlayers(name, symbol);
-		view.showPlayers(model.game.player1, model.game.player2);
+		view.showScores(model.game.player1, model.game.player2);
 		view.startGame();
-		this.playGame();
+		setTimeout(function (){
+			this.playGame();
+		}.bind(this),1000);
 	},
 	playGame: function(move){
 		if (!model.game.finished){
@@ -298,7 +300,7 @@ var controller = {
 				view.showWinningMove(model.game.winningMoves);
 			}
 			view.showWinner(model.game.winner);
-			view.showPlayers(model.game.player1, model.game.player2);
+			view.showScores(model.game.player1, model.game.player2);
 			},500);
 
 		 setTimeout(function (){
@@ -397,7 +399,6 @@ var view = {
 		for (prop in this.btnEntry){
 			if (this.btnEntry[prop][0] ==  row && this.btnEntry[prop][1] == col){
 				box = prop;
-				
 				break;
 			}
 		}
@@ -410,50 +411,39 @@ var view = {
     	}
 	},
 	showBoard: function(){
-		$(".board").fadeIn(1500);
-		//	document.getElementsByClassName("boxList")[0].style.opacity = 1;
+		$(".board").fadeIn(1200);
 	},
 	hideBoard: function(){
 		return $(".board").fadeOut(300);
-		//document.getElementsByClassName("boxList")[0].style.opacity = 0;
 	},
-	showPlayers: function(player1, player2){
-		//document.getElementsByClassName("players")[0].style.opacity = 1;
-		document.getElementsByClassName("player1")[0].innerHTML = model.game.player1.name + ": " + model.game.player1.score;
-		document.getElementsByClassName("draw")[0].innerHTML ="draw" + ": 0";
-	
-		document.getElementsByClassName("computer")[0].innerHTML = model.game.player2.name + ": " + model.game.player2.score;
-		//document.getElementsByClassName("symbolOptions")[0].style.opacity = 0;
+	showScores: function(player1, player2){
+		document.getElementsByClassName("player1-score")[0].innerHTML = model.game.player1.name + ": " + model.game.player1.score;
+		document.getElementsByClassName("computer-score")[0].innerHTML = model.game.player2.name + ": " + model.game.player2.score;
 	},
-	hidePlayers: function(){
-		//document.getElementsByClassName("players")[0].style.opacity = 0;
-	},
-	//startGame
 	hideSymbolOptions: function(){
 		return $(".symbolOptions").fadeOut(200);
-		 //	document.getElementsByClassName("symbolOptions")[0].style.display = "none";
-		 //document.getElementById("X").style.opacity = 0;
-		//document.getElementById("O").style.opacity = 0;
 	},
 	showSymbolOptions: function(){
-		return $(".symbolOptions").fadeIn(1500);
-		//document.getElementsByClassName("symbolOptions")[0].style.display = "block";
+		return $(".symbolOptions").fadeIn(1200);
 	},
 	startGame: function(){
 		this.hideSymbolOptions().promise().done(function(){
     		this.showBoard();
 		}.bind(this));
 	},
-
 	showTurn: function(player){
-		if (player.name == "computer"){
-			document.getElementsByClassName("computersTurn")[0].classList.add('show');
-			document.getElementsByClassName("player1Turn")[0].classList.remove('show');
-		}
-		else{
-				document.getElementsByClassName("player1Turn")[0].classList.add('show');
-				document.getElementsByClassName("computersTurn")[0].classList.remove('show')
-		}			
+	//	if (player.name == "computer"){
+			document.getElementsByClassName("playersTurn-name")[0].innerHTML = player.name + "'s " + "turn";
+			//document.getElementsByClassName("computersTurn")[0].classList.add('show');
+			//document.getElementsByClassName("player1Turn")[0].classList.remove('show');
+		//}
+	//	else{
+				//document.getElementsByClassName("player1Turn")[0].classList.add('show');
+				//document.getElementsByClassName("computersTurn")[0].classList.remove('show')
+	///
+	},
+	clearTurn: function(player){
+			document.getElementsByClassName("playersTurn-name")[0].innerHTML = "";
 	},
 	showWinningMove: function(winningMove){
 		var box=[];
@@ -492,6 +482,7 @@ var view = {
 	},
 	resetAll: function(){
 		this.clearBoard();
+		this.clearTurn();
 		this.hideBoard().promise().done(function(){
     		this.showSymbolOptions();
 		}.bind(this));

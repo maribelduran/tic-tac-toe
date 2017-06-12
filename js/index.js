@@ -414,11 +414,7 @@ var view = {
 		//	document.getElementsByClassName("boxList")[0].style.opacity = 1;
 	},
 	hideBoard: function(){
-<<<<<<< HEAD
-		return $(".board").fadeOut(600);
-=======
 		return $(".board").fadeOut(300);
->>>>>>> 4f338caccbff0a6e31de9998123aa3f3f6cffb26
 		//document.getElementsByClassName("boxList")[0].style.opacity = 0;
 	},
 	showPlayers: function(player1, player2){
@@ -434,11 +430,7 @@ var view = {
 	},
 	//startGame
 	hideSymbolOptions: function(){
-<<<<<<< HEAD
-		return $(".symbolOptions").fadeOut(600);
-=======
 		return $(".symbolOptions").fadeOut(200);
->>>>>>> 4f338caccbff0a6e31de9998123aa3f3f6cffb26
 		 //	document.getElementsByClassName("symbolOptions")[0].style.display = "none";
 		 //document.getElementById("X").style.opacity = 0;
 		//document.getElementById("O").style.opacity = 0;

@@ -1,5 +1,6 @@
 //http://javascript.info/settimeout-setinterval
 //http://www.geeksforgeeks.org/minimax-algorithm-in-game-theory-set-3-tic-tac-toe-ai-finding-optimal-move/
+//https://stackoverflow.com/questions/8207897/jquery-waiting-for-the-fadeout-to-complete-before-running-fadein
 const MAX_PLAYERS = 2;
 
 function TicTacToe(){
@@ -258,9 +259,8 @@ var controller = {
 	},
 	setPlayers: function(name, symbol){
 		model.game.setPlayers(name, symbol);
-		view.hideSymbolOptions();
-		view.showBoard();
 		view.showPlayers(model.game.player1, model.game.player2);
+		view.startGame();
 		this.playGame();
 	},
 	playGame: function(move){
@@ -414,7 +414,7 @@ var view = {
 		//	document.getElementsByClassName("boxList")[0].style.opacity = 1;
 	},
 	hideBoard: function(){
-		$(".board").fadeOut(300);
+		return $(".board").fadeOut(300);
 		//document.getElementsByClassName("boxList")[0].style.opacity = 0;
 	},
 	showPlayers: function(player1, player2){
@@ -428,15 +428,21 @@ var view = {
 	hidePlayers: function(){
 		//document.getElementsByClassName("players")[0].style.opacity = 0;
 	},
+	//startGame
 	hideSymbolOptions: function(){
-		$(".symbolOptions").fadeOut(100);
+		return $(".symbolOptions").fadeOut(200);
 		 //	document.getElementsByClassName("symbolOptions")[0].style.display = "none";
 		 //document.getElementById("X").style.opacity = 0;
 		//document.getElementById("O").style.opacity = 0;
 	},
 	showSymbolOptions: function(){
-		$(".symbolOptions").fadeIn(1500);
+		return $(".symbolOptions").fadeIn(1500);
 		//document.getElementsByClassName("symbolOptions")[0].style.display = "block";
+	},
+	startGame: function(){
+		this.hideSymbolOptions().promise().done(function(){
+    		this.showBoard();
+		}.bind(this));
 	},
 
 	showTurn: function(player){
@@ -486,7 +492,9 @@ var view = {
 	},
 	resetAll: function(){
 		this.clearBoard();
-		$(".board").fadeOut(300, this.showSymbolOptions);
+		this.hideBoard().promise().done(function(){
+    		this.showSymbolOptions();
+		}.bind(this));
 	}
 };
 

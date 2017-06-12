@@ -414,7 +414,7 @@ var view = {
 		//	document.getElementsByClassName("boxList")[0].style.opacity = 1;
 	},
 	hideBoard: function(){
-		return $(".board").fadeOut(500);
+		return $(".board").fadeOut(600);
 		//document.getElementsByClassName("boxList")[0].style.opacity = 0;
 	},
 	showPlayers: function(player1, player2){
@@ -430,7 +430,7 @@ var view = {
 	},
 	//startGame
 	hideSymbolOptions: function(){
-		return $(".symbolOptions").fadeOut(500);
+		return $(".symbolOptions").fadeOut(600);
 		 //	document.getElementsByClassName("symbolOptions")[0].style.display = "none";
 		 //document.getElementById("X").style.opacity = 0;
 		//document.getElementById("O").style.opacity = 0;

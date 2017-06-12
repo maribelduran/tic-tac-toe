@@ -1,13 +1,12 @@
 //http://javascript.info/settimeout-setinterval
 //http://www.geeksforgeeks.org/minimax-algorithm-in-game-theory-set-3-tic-tac-toe-ai-finding-optimal-move/
-
 const MAX_PLAYERS = 2;
 
 function TicTacToe(){
 	this.player1 = {};
 	this.player2 = {};
 	this.currentPlayer = null;
-	this.winner = null
+	this.winner = null;
 	this.winningMoves = null;
 	this.finished = false
 	this.board = [
@@ -45,24 +44,23 @@ function flipCoin(min, max){
  	return Math.floor(Math.random() * (max - min)) + min;
 }
 
-//returns a succesful move or null
+//returns a succesful move or empty move;
 TicTacToe.prototype.play = function(player, row, col){
-	var position = {};
+	var move = {};
 	//place symbol
 	if (player == "computer"){
-		position = this.getBestMove();
-		this.board[position.row][position.col] = this.player2.symbol;
-		console.log(position);
+		move = this.getBestMove();
+		this.board[move.row][move.col] = this.player2.symbol;
 	}
 	else{
-		//if position hasn't already been taken then set the position to the player's symbol
-		if (!this.positionFilled(row,col)){
+		//if move hasn't already been taken then set that move to the player's symbol
+		if (!this.moveFilled(row,col)){
 			this.board[row][col] = this.player1.symbol;
-			position.row = row;
-			position.col = col;
-			//return an empty position to represent that the move was not available
+			move.row = row;
+			move.col = col;
 		}else{
-			return position;
+			//return an empty move to represent that the move was not available
+			return move;
 		}
 	}
 	//check if there is a winner	
@@ -70,15 +68,16 @@ TicTacToe.prototype.play = function(player, row, col){
 	if (isWinner){
 		this.currentPlayer.score +=1;
 		this.winner = this.currentPlayer;
-		this.setCurrentPlayer(this.winner);
-		//need to save the position that won the game to show 
+		this.setCurrentPlayer(this.winner); 
 		this.finished = true;
-		return position;
+		return move;
 	}
+	//check if the game has finished;
 	this.finished = this.isGameFinished();
+	
 	//Switch players
 	this.currentPlayer = this.currentPlayer == this.player1 ? this.player2 : this.player1;
-	return position;
+	return move;
 };
 
 TicTacToe.prototype.checkWinner = function(){
@@ -132,7 +131,6 @@ TicTacToe.prototype.checkWinner = function(){
 	 		return -10
    	}
   }
-	
 	return 0;
 }
 
@@ -159,7 +157,7 @@ TicTacToe.prototype.getBestMove = function(){
 			if (this.board[row][col] === 0){
 				//make the move and call minimax
 				this.board[row][col] = this.currentPlayer.symbol;
-				var currentMoveVal = this.minimax(this.board, 0, true);
+				var currentMoveVal = this.minimax(this.board, 0, false);
 				//undo the move
 				this.board[row][col] = 0;
 				if (currentMoveVal > bestMove.val){
@@ -178,7 +176,9 @@ TicTacToe.prototype.minimax = function(board, depth, isMaximizingPlayer){
 	var score = this.checkWinner();
 
 	//If Maximizer or Minimizer has won the game return player's score
-	if (score == 10 || score == -10){
+	if (score == 10){
+		return score;
+	}else if(score == -10){
 		return score;
 	}
 
@@ -206,19 +206,19 @@ TicTacToe.prototype.minimax = function(board, depth, isMaximizingPlayer){
 		for (var row=0; row<3; row++){
 			for (var col=0; col<3; col++){
 				if (this.board[row][col] === 0){
-					this.board[row][col] = this.currentPlayer.symbol;
+					this.board[row][col] = this.currentPlayer == this.player1 ? this.player2.symbol : this.player1.symbol;
 					bestVal = Math.min(bestVal, this.minimax(board, depth+1, !isMaximizingPlayer));
 					this.board[row][col] = 0;
 				}
 			}
 		}
-		return 0;
+		return bestVal;
 	}
 }
 
-//returns boolean reperesenting whether the position in the board has been filled
-TicTacToe.prototype.positionFilled = function(row,col){
-	//if the position is empty return false
+//returns boolean reperesenting whether the cell in the board has been filled
+TicTacToe.prototype.moveFilled = function(row,col){
+	//if the cell is empty return false
 	if (this.board[row][col] == 0){
 		return false;
 	}
@@ -230,6 +230,7 @@ TicTacToe.prototype.reset = function(){
 	this.player1 = {};
 	this.player2 = {};
 	this.currentPlayer = null;
+	this.clearBoard();
 }
 
 TicTacToe.prototype.clearBoard = function(){
@@ -248,8 +249,6 @@ var model = {
 	game: {},
 	setupGame: function(){
 		this.game = new TicTacToe();
-		//show player symbols options
-		console.log("Initialized a new TicTacToe game!")
 	}
 };
 
@@ -258,8 +257,8 @@ var controller = {
 		model.setupGame();
 	},
 	setPlayers: function(name, symbol){
-		view.hidePlayerOptions();
 		model.game.setPlayers(name, symbol);
+		view.hideSymbolOptions();
 		view.showBoard();
 		view.showPlayers(model.game.player1, model.game.player2);
 		this.playGame();
@@ -269,19 +268,15 @@ var controller = {
 			//if the curent player is the computer, then disable the board and let computer take a turn
 			if (model.game.currentPlayer.name == "computer"){
 				view.disableBoard();
-				console.log("It's the computer's turn!");
 				view.showTurn(model.game.currentPlayer);
 				var move = model.game.play(model.game.currentPlayer.name);
-				console.log("Computer's move was: ", move.row, move.col);
 				var timeoutID = setTimeout(function (){
 						//show the computer's move on the screen
 						view.showMove(model.game.player2.symbol, move.row, move.col);
 						this.playGame();
 				}.bind(this),500);
-				
 
 			}else{
-				console.log("It's", model.game.currentPlayer.name, "'s turn!");
 				view.enableBoard();
 				view.showTurn(model.game.currentPlayer);
 			}
@@ -294,15 +289,14 @@ var controller = {
 	resetAll: function(){
 		model.game.reset();
 		view.disableBoard();
-		view.clearBoard();
-		view.hideBoard();
-		view.hidePlayers();
-		view.showPlayerOptions();
+		view.resetAll();
 	},
 	//shows winner and start new game round
 	showWinnerAndReplay: function(){
 		var timeoutID = setTimeout(function (){
-			view.showWinningMove(model.game.winningMoves);
+			if (model.game.winner !== null){
+				view.showWinningMove(model.game.winningMoves);
+			}
 			view.showWinner(model.game.winner);
 			view.showPlayers(model.game.player1, model.game.player2);
 			},500);
@@ -318,14 +312,11 @@ var controller = {
 		if (Object.keys(move).length !== 0){
 			//show the computer's move on the screen
 			view.showMove(model.game.player1.symbol, move.row, move.col, true);
-		}	
-		else{
-			console.log("Move is already taken! Try again.");
 		}
 		this.playGame();				
 	},
 	checkMove: function(row,col){
-		if (!model.game.positionFilled(row,col)){
+		if (!model.game.moveFilled(row,col)){
 			view.showMove(model.game.currentPlayer.symbol, row, col, false);
 		}
 	}
@@ -357,19 +348,19 @@ var view = {
     		}
 		});
 
-	/*	boxList.addEventListener('mouseover', function(event){
+		boxList.addEventListener('onmouseover', function(event){
 			if (view.boardEnabled){
 				var boxClicked = event.target;
 				controller.checkMove(view.btnEntry[boxClicked.id][0], view.btnEntry[boxClicked.id][1]);
     		}
 		});
-		boxList.addEventListener('mouseleave', function(event){
+		boxList.addEventListener('onmouseout', function(event){
 			if (view.boardEnabled){
 				var boxClicked = event.target;
-				view.hideMove(view.btnEntry[boxClicked.id][0], view.btnEntry[boxClicked.id][1]);
+				console.log(boxClicked);
+				view.removeMove(view.btnEntry[boxClicked.id][0], view.btnEntry[boxClicked.id][1]);
     		}
 		});
-		*/
 
 		document.getElementById("X").addEventListener("click", function(){
 				controller.setPlayers("player1", "X");
@@ -382,8 +373,6 @@ var view = {
 		document.getElementById("reset").addEventListener("click", function(){
 			controller.resetAll();
 		});
-
-
 	},
 	enableBoard: function(){
 		this.boardEnabled = true;
@@ -397,19 +386,12 @@ var view = {
 		for (prop in this.btnEntry){
 			if (this.btnEntry[prop][0] ==  row && this.btnEntry[prop][1] == col){
 				box = prop;
-				
 				break;
 			}
 		}
 		document.getElementById(box).innerHTML = symbol;
-		if (isClicked){
-			document.getElementById(box).style.opacity = 1;
-		}
-		else{
-			document.getElementById(box).style.opacity = 0.5;
-		}
 	},
-	hideMove: function(col,row){
+	removeMove: function(col,row){
 		var box = "";
 
 		for (prop in this.btnEntry){
@@ -419,38 +401,42 @@ var view = {
 				break;
 			}
 		}
-		document.getElementById(box).style.opacity = 1;
 		document.getElementById(box).innerHTML = "";
 	},
 	clearBoard: function(){
-			var boxListItems = document.getElementsByTagName("li");
+		var boxListItems = document.getElementsByTagName("li");
    		for (var i = 0; i < boxListItems.length; i++) {
     		boxListItems[i].innerHTML = "";
     	}
 	},
 	showBoard: function(){
-		document.getElementsByClassName("boxList")[0].style.opacity = 1;
+		$(".board").fadeIn(1500);
+		//	document.getElementsByClassName("boxList")[0].style.opacity = 1;
 	},
 	hideBoard: function(){
-		document.getElementsByClassName("boxList")[0].style.opacity = 0;
+		$(".board").fadeOut(300);
+		//document.getElementsByClassName("boxList")[0].style.opacity = 0;
 	},
 	showPlayers: function(player1, player2){
-		document.getElementsByClassName("players")[0].style.opacity = 1;
+		//document.getElementsByClassName("players")[0].style.opacity = 1;
 		document.getElementsByClassName("player1")[0].innerHTML = model.game.player1.name + ": " + model.game.player1.score;
+		document.getElementsByClassName("draw")[0].innerHTML ="draw" + ": 0";
+	
 		document.getElementsByClassName("computer")[0].innerHTML = model.game.player2.name + ": " + model.game.player2.score;
 		//document.getElementsByClassName("symbolOptions")[0].style.opacity = 0;
 	},
 	hidePlayers: function(){
-		document.getElementsByClassName("players")[0].style.opacity = 0;
+		//document.getElementsByClassName("players")[0].style.opacity = 0;
 	},
-	hidePlayerOptions: function(){
-		 	document.getElementsByClassName("symbolOptions")[0].style.display = "none";
+	hideSymbolOptions: function(){
+		$(".symbolOptions").fadeOut(100);
+		 //	document.getElementsByClassName("symbolOptions")[0].style.display = "none";
 		 //document.getElementById("X").style.opacity = 0;
 		//document.getElementById("O").style.opacity = 0;
 	},
-	showPlayerOptions: function(){
-		console.log("Hello");
-		document.getElementsByClassName("symbolOptions")[0].style.display = "block";
+	showSymbolOptions: function(){
+		$(".symbolOptions").fadeIn(1500);
+		//document.getElementsByClassName("symbolOptions")[0].style.display = "block";
 	},
 
 	showTurn: function(player){
@@ -479,24 +465,28 @@ var view = {
 				document.getElementById(id).classList.remove('winningBox');
 			});
 		},1000);
-
-	},	
+	},
 	showWinner: function(winner){
 		var message = ""
-		if (winner.name == "player1"){
+		if (winner == null){
+				message = "It was a tie..."
+		}
+		else if (winner.name == "player1"){
 				message	= "You Won :)"
 		}
 		else if (winner.name == "computer"){
-			message = "You lost this time :("
+				message = "You lost this time :("
 		}
-		else {
-			message = "It was a tie..."
-		}
-		document.getElementById("winner_name").style.opacity = 1;
 		document.getElementById("winner_name").textContent = message;
+		document.getElementById("winner_name").classList.remove("hide")
+		
 		setTimeout(function (){
-			document.getElementById("winner_name").style.opacity = 0;
-		},500);
+			document.getElementById("winner_name").classList.remove("hide")
+		},1000);
+	},
+	resetAll: function(){
+		this.clearBoard();
+		$(".board").fadeOut(300, this.showSymbolOptions);
 	}
 };
 

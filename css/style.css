@@ -43,9 +43,17 @@ li{
   border-width: thick;
   box-sizing: border-box;
   position: relative;
-
+  border-top:none;
+  border-left:none;
 }
 
+li:nth-child(3n) {
+  border-right:none;
+}
+
+li:nth-last-child(-n+3){
+  border-bottom:none;
+}
 
 
 .reset{

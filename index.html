@@ -2,42 +2,64 @@
 <html>
 <head>
 	 <link rel="stylesheet" href="css/style.css">
+	  <link rel='stylesheet prefetch' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css'>
 </head>
 <body>
 
 
+<div class="container">
+	<div class="well">
 
-<div class='symbolOptions'>
-Player 1 Choose Symbol:
-<button id="X">X</button>
-<button id="O">O</button>
-<br>
+		<div class='symbolOptions'>
+			<h4>Player 1 choose your symbol</h4>
+			<button id="X">X</button>
+			<button id="O">O</button>
+			<br>
+		</div>
+
+	<div class="board">
+			<div class="row players">
+				<div class="col-xs-4">
+					<p class="player1"></p>
+				</div>
+					<div class="col-xs-4">
+					<p class="draw text-center"></p>
+				</div>
+			<div class="col-xs-4">
+				<p class="computer text-right"></p>
+			</div>
+		</div>
+
+	<div class="row">
+			<div class=col-xs-4>
+				<h5 class="player1Turn hide" >Player 1's Turn</h5>
+			</div>
+			<div class=col-xs-6>
+				<h5 class="computersTurn hide">Computer's Turn</h5>
+			</div>
+	</div>
+
+	<div class="winner hide">
+		<h3 id="winner_name"></h3>
+	</div>
+
+	<ul class="boxList">
+		<li id="box0" class="0"></li>
+		<li id="box1" class="1"></li>
+		<li id="box2" class="2"></li>
+		<li id="box3" class="3"></li>
+		<li id="box4" class="4"></li>
+		<li id="box5" class="5"></li>
+		<li id="box6" class="6"></li>
+		<li id="box7" class="7"></li>
+		<li id="box8" class="8"></li>
+	</ul>
+
+	<button id="reset" class="reset">Reset</button>
+	</div>
+
+	</div>
 </div>
-<div class="players">
-<p class="player1"></p>
-<p class="computer"></p>
-</div>
-
-<button id="reset">Reset</button>
-
-<h3 class="player1Turn hide" >Player 1's Turn</h3>
-<h3 class="computersTurn hide">computer's Turn</h3>
-
-<div class="winner"><h3 id="winner_name"></h3></div>
-
-
-<ul class="boxList">
-	<li id="box0" class="0"></li>
-	<li id="box1" class="1"></li>
-	<li id="box2" class="2"></li>
-	<li id="box3" class="3"></li>
-	<li id="box4" class="4"></li>
-	<li id="box5" class="5"></li>
-	<li id="box6" class="6"></li>
-	<li id="box7" class="7"></li>
-	<li id="box8" class="8"></li>
-</ul>
-
 </body>
 <script src="js/index.js"></script>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js'></script>

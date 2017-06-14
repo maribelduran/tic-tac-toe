@@ -276,7 +276,7 @@ var controller = {
 						//show the computer's move on the screen
 						view.showMove(model.game.player2.symbol, move.row, move.col);
 						this.playGame();
-				}.bind(this),500);
+				}.bind(this),1000);
 
 			}else{
 				view.enableBoard();
@@ -301,7 +301,7 @@ var controller = {
 			}
 			view.showWinner(model.game.winner);
 			view.showScores(model.game.player1, model.game.player2);
-			},500);
+			},1000);
 
 		 setTimeout(function (){
 			model.game.clearBoard();
@@ -383,18 +383,29 @@ var view = {
 		this.boardEnabled = false;
 	},
 	showMove: function(symbol,row, col, isClicked){
-		var box = "";
+		var boxID = "";
 
 		for (prop in this.btnEntry){
 			if (this.btnEntry[prop][0] ==  row && this.btnEntry[prop][1] == col){
-				box = prop;
+				boxID = prop;
 				break;
 			}
 		}
-		document.getElementById(box).innerHTML = symbol;
+		var box = document.getElementById(boxID);
+
+		var circleIcon = "fa-circle-o";
+		var timesIcon = "fa-times";
+
+		if (symbol.toUpperCase() == "X"){
+				box.getElementsByTagName("i")[0].classList.add(timesIcon);
+		}else{
+			box.getElementsByTagName("i")[0].classList.add(circleIcon);
+		}
+		
+		//document.getElementById(box).innerHTML = symbol;
 	},
 	removeMove: function(col,row){
-		var box = "";
+		var boxID = "";
 
 		for (prop in this.btnEntry){
 			if (this.btnEntry[prop][0] ==  row && this.btnEntry[prop][1] == col){
@@ -402,13 +413,10 @@ var view = {
 				break;
 			}
 		}
-		document.getElementById(box).innerHTML = "";
+		var box = document.getElementById(boxID);
 	},
 	clearBoard: function(){
-		var boxListItems = document.getElementsByTagName("li");
-   		for (var i = 0; i < boxListItems.length; i++) {
-    		boxListItems[i].innerHTML = "";
-    	}
+		$("li>i").removeClass('fa-circle-o fa-times');
 	},
 	showBoard: function(){
 		$(".board").fadeIn(1200);
@@ -432,33 +440,31 @@ var view = {
 		}.bind(this));
 	},
 	showTurn: function(player){
-	//	if (player.name == "computer"){
+	
 			document.getElementsByClassName("playersTurn-name")[0].innerHTML = player.name + "'s " + "turn";
-			//document.getElementsByClassName("computersTurn")[0].classList.add('show');
-			//document.getElementsByClassName("player1Turn")[0].classList.remove('show');
-		//}
-	//	else{
-				//document.getElementsByClassName("player1Turn")[0].classList.add('show');
-				//document.getElementsByClassName("computersTurn")[0].classList.remove('show')
-	///
 	},
 	clearTurn: function(player){
 			document.getElementsByClassName("playersTurn-name")[0].innerHTML = "";
 	},
 	showWinningMove: function(winningMove){
-		var box=[];
+		var boxId=[];
 		for (var i=0; i<winningMove.length;i++){
 			for (prop in this.btnEntry){
 				if (this.btnEntry[prop][0] ==  winningMove[i][0] && this.btnEntry[prop][1] == winningMove[i][1]){
-					box.push(prop);
-					document.getElementById(prop).classList.add('winningBox');
+					boxId.push(prop);
+					var box = document.getElementById(prop);
+				//	box.getElementsByTagName("i")[0].classList.add("fa-5x");
+				//	$('.symbol').addClass('winningMove');
+					//document.getElementById(prop).classList.add('winningMove');
 					break;
 				}
 			}
 		}
+
+		console.log(boxId);
 		var timeoutID = setTimeout(function (){
-			box.forEach(function(id){
-				document.getElementById(id).classList.remove('winningBox');
+			boxId.forEach(function(id){
+				//document.getElementById(id).classList.remove('winningMove');
 			});
 		},1000);
 	},

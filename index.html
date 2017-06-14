@@ -3,53 +3,55 @@
 <head>
 	 <link rel="stylesheet" href="css/style.css">
 	  <link rel='stylesheet prefetch' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css'>
+	   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css"/>
 </head>
 <body>
 
 
 <div class="container">
-	<div class="well">
+	<div class="game-well">
 
 		<div class='symbolOptions'>
 			<h4>Player 1 choose your symbol</h4>
-			<button id="X">X</button>
-			<button id="O">O</button>
+			<button id="X"><i class="fa fa-times fa-5x" aria-hidden="true"></i></button>
+			<button id="O"><i class="fa fa-circle-o fa-5x" aria-hidden="true"></i></button>
 			<br>
 		</div>
 
 	<div class="board">
-			<div class="row players">
-				<div class="col-xs-6">
+			<div class="row">
+				<div class="col-sm-6">
 					<p class="player1-score"></p>
-					</div>
-			<div class="col-xs-6">
-				<p class="computer-score text-right"></p>
+				</div>
+
+				<div class="col-sm-6 text-right">
+					<p class="computer-score"></p>
+				</div>
 			</div>
+
+		<div class="row playersTurn">
+				<div class=col-xs-12>
+					<h5 class="playersTurn-name text-center"></h5>
+				</div>
 		</div>
 
-	<div class="row playersTurn">
-			<div class=col-xs-12>
-				<h5 class="playersTurn-name text-center"></h5>
-			</div>
-	</div>
+		<div class="winner hide">
+			<h3 id="winner_name"></h3>
+		</div>
 
-	<div class="winner hide">
-		<h3 id="winner_name"></h3>
-	</div>
+		<ul class="boxList">
+			<li id="box0" class="0"><i class="fa fa-4x" aria-hidden="true"></i></li>
+			<li id="box1" class="1"><i class="fa fa-4x" aria-hidden="true"></i></li>
+			<li id="box2" class="2"><i class="fa fa-4x" aria-hidden="true"></i></li>
+			<li id="box3" class="3"><i class="fa fa-4x" aria-hidden="true"></i></li>
+			<li id="box4" class="4"><i class="fa fa-4x" aria-hidden="true"></i></li>
+			<li id="box5" class="5"><i class="fa fa-4x" aria-hidden="true"></i></li>
+			<li id="box6" class="6"><i class="fa fa-4x" aria-hidden="true"></i></li>
+			<li id="box7" class="7"><i class="fa fa-4x" aria-hidden="true"></i></li>
+			<li id="box8" class="8"><i class="fa fa-4x" aria-hidden="true"></i></li>
+		</ul>
 
-	<ul class="boxList">
-		<li id="box0" class="0"></li>
-		<li id="box1" class="1"></li>
-		<li id="box2" class="2"></li>
-		<li id="box3" class="3"></li>
-		<li id="box4" class="4"></li>
-		<li id="box5" class="5"></li>
-		<li id="box6" class="6"></li>
-		<li id="box7" class="7"></li>
-		<li id="box8" class="8"></li>
-	</ul>
-
-	<button id="reset" class="reset">Reset Game</button>
+		<button id="reset" class="reset text-right">Reset Game</button>
 	</div>
 
 	</div>

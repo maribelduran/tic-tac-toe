@@ -1,28 +1,34 @@
 body{
 
 }
-
-.well{
-  margin: auto;
-  margin-top: 10%;
+.game-well{
+  margin:auto;
+  margin-top: 60px;
   min-width: 400px;
   width:400px;
   height: 450px;
- 
+  padding: 20px;
+  padding-bottom: 0;
+  background-color: white;
+  border-style: solid;
+  border-width: thin;
+  border-color: #ccc;
+  box-shadow: 10px 10px 10px 0px rgba(204, 204, 204, 0.75);
+   position: relative;
+
 }
+
+
 
 .boxList{
   width: 100%;
   height: 250px;
   padding-left: 0 !important;
   list-style: none;
-  display: flex !important;
-  display: -webkit-flex;
-  -webkit-flex-wrap: wrap;
-  flex-wrap: wrap;
+ 
   /*justify-content: space-around;*/
-}
 
+}
 
 
 .symbolOptions{
@@ -32,6 +38,8 @@ body{
 
 .board{
   display: none;
+  position: relative;
+  height: 100%;
 }
 
 li{
@@ -40,12 +48,32 @@ li{
   float:left;
   text-align: center;
   border-style: solid;
-  border-width: thick;
+  border-width: thin;
+   border-color: #ccc;
   box-sizing: border-box;
   position: relative;
   border-top:none;
   border-left:none;
+  padding: 10px;
+  
 }
+
+.fa-circle-o{
+  color: #66a1ee;
+  text-shadow: 3px 3px;
+  transition: 0.3s ease-in;
+}
+
+.fa-times{
+  color: #66eece;
+  text-shadow: 3px 3px;
+  transition: 0.3s ease-in;
+}
+
+.fa-5x{
+  transition: 1s ease-in;
+}
+
 
 li:nth-child(3n) {
   border-right:none;
@@ -57,22 +85,12 @@ li:nth-last-child(-n+3){
 
 .playersTurn{
   height: 40px;
+  margin-bottom: 20px;
+}
+
+.symbol{
+  font-style: normal;
 }
 
 
-.reset{
-  width: 100%;
-}
-
-.show{
-  visibility: visible !important;
-}
-
-.hide{
-  visibility: hidden;
-}
-
-.winningBox{
-  border-color: blue;
-}
 

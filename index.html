@@ -8,38 +8,54 @@
 <body>
 
 
-<div class="container">
+<div class="container-fluid">
 	<div class="game-well">
 
 		<div class='symbolOptions'>
 			<h4>Player 1 choose your symbol</h4>
 			<button id="X"><i class="fa fa-times fa-5x" aria-hidden="true"></i></button>
 			<button id="O"><i class="fa fa-circle-o fa-5x" aria-hidden="true"></i></button>
-			<br>
 		</div>
 
-	<div class="board">
-			<div class="row">
-				<div class="col-sm-6">
-					<p class="player1-score"></p>
+	<div class="board-container">
+			<div class="row no-gutters">
+					<div class="col-xs-6  score-board">
+					<div class="row no-gutters player-and-stats ">
+						<div class="col-xs-8 player x-player">
+
+								<h5 class="player1-name ">PLAYER 1</h5>
+						</div>
+						<div class="col-xs-2 col-xs-offset-1 stats">
+								<h5 class="player1-score score">0</h5>
+						</div>	
+					</div>
+					<div class="row no-gutters player-and-stat ">
+							<div class="col-xs-8 player o-player">
+								<h5 class="computer-name ">computer</h5>
+							</div>
+							<div class="col-xs-2 col-xs-offset-1 stats">
+							 	<h5 class="computer-score score"></h5>
+							</div>
+					</div>
+
+					<h4 class="sponsor-name "><b>TIC TAC TOE<b></h4>
 				</div>
 
-				<div class="col-sm-6 text-right">
-					<p class="computer-score"></p>
+				<div class="col-xs-6 text-right ">
+					<button id="reset" class="btn btn-default btn-lg"><i class="fa fa-undo fa-3x" aria-hidden="true"></i></button>
 				</div>
 			</div>
-
-		<div class="row playersTurn">
-				<div class=col-xs-12>
+			
+			
+		<div class=" playersTurn">
 					<h5 class="playersTurn-name text-center"></h5>
-				</div>
 		</div>
 
 		<div class="winner hide">
 			<h3 id="winner_name"></h3>
 		</div>
 
-		<ul class="boxList">
+		<ul class="boxList game-board">
 			<li id="box0" class="0"><i class="fa fa-4x" aria-hidden="true"></i></li>
 			<li id="box1" class="1"><i class="fa fa-4x" aria-hidden="true"></i></li>
 			<li id="box2" class="2"><i class="fa fa-4x" aria-hidden="true"></i></li>
@@ -51,7 +67,6 @@
 			<li id="box8" class="8"><i class="fa fa-4x" aria-hidden="true"></i></li>
 		</ul>
 
-		<button id="reset" class="reset text-right">Reset Game</button>
 	</div>
 
 	</div>

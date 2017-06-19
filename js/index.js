@@ -305,7 +305,7 @@ var controller = {
 
 		 setTimeout(function (){
 			model.game.clearBoard();
-			view.clearBoard();
+			view.clearGameBoard();
 			this.playGame();
 			}.bind(this),1000);
 	},	
@@ -415,18 +415,20 @@ var view = {
 		}
 		var box = document.getElementById(boxID);
 	},
-	clearBoard: function(){
+	clearGameBoard: function(){
 		$("li>i").removeClass('fa-circle-o fa-times');
 	},
 	showBoard: function(){
-		$(".board").fadeIn(1200);
+		$(".board-container").fadeIn(1200);
 	},
 	hideBoard: function(){
-		return $(".board").fadeOut(300);
+		return $(".board-container").fadeOut(300);
 	},
 	showScores: function(player1, player2){
-		document.getElementsByClassName("player1-score")[0].innerHTML = model.game.player1.name + ": " + model.game.player1.score;
-		document.getElementsByClassName("computer-score")[0].innerHTML = model.game.player2.name + ": " + model.game.player2.score;
+	//	document.getElementsByClassName("player1-score")[0].innerHTML = model.game.player1.name + ": " + model.game.player1.score;
+		//document.getElementsByClassName("computer-score")[0].innerHTML = model.game.player2.name + ": " + model.game.player2.score;
+		document.getElementsByClassName("player1-score")[0].innerHTML = model.game.player1.score;
+		document.getElementsByClassName("computer-score")[0].innerHTML =model.game.player2.score;
 	},
 	hideSymbolOptions: function(){
 		return $(".symbolOptions").fadeOut(200);
@@ -487,7 +489,7 @@ var view = {
 		},1000);
 	},
 	resetAll: function(){
-		this.clearBoard();
+		this.clearGameBoard();
 		this.clearTurn();
 		this.hideBoard().promise().done(function(){
     		this.showSymbolOptions();

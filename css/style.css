@@ -1,26 +1,40 @@
 body{
+ 
+}
+
+.container-fluid{
+  height: 100vh;
+  background: -moz-linear-gradient(131deg, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 24%, rgba(102,238,206,1) 53%, rgba(102,161,238,1) 67%, rgba(102,161,238,1) 69%, rgba(102,161,238,1) 76%, rgba(102,161,238,1) 83%, rgba(102,161,238,1) 100%); /* ff3.6+ */
+  background: -webkit-gradient(linear, left top, right bottom, color-stop(0%, rgba(102,161,238,1)), color-stop(17%, rgba(102,161,238,1)), color-stop(24%, rgba(102,161,238,1)), color-stop(31%, rgba(102,161,238,1)), color-stop(33%, rgba(102,161,238,1)), color-stop(47%, rgba(102,238,206,1)), color-stop(76%, rgba(255,255,255,1)), color-stop(100%, rgba(255,255,255,1))); /* safari4+,chrome */
+  background: -webkit-linear-gradient(131deg, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 24%, rgba(102,238,206,1) 53%, rgba(102,161,238,1) 67%, rgba(102,161,238,1) 69%, rgba(102,161,238,1) 76%, rgba(102,161,238,1) 83%, rgba(102,161,238,1) 100%); /* safari5.1+,chrome10+ */
+  background: -o-linear-gradient(131deg, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 24%, rgba(102,238,206,1) 53%, rgba(102,161,238,1) 67%, rgba(102,161,238,1) 69%, rgba(102,161,238,1) 76%, rgba(102,161,238,1) 83%, rgba(102,161,238,1) 100%); /* opera 11.10+ */
+  background: -ms-linear-gradient(131deg, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 24%, rgba(102,238,206,1) 53%, rgba(102,161,238,1) 67%, rgba(102,161,238,1) 69%, rgba(102,161,238,1) 76%, rgba(102,161,238,1) 83%, rgba(102,161,238,1) 100%); /* ie10+ */
+  background: linear-gradient(319deg, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 24%, rgba(102,238,206,1) 53%, rgba(102,161,238,1) 67%, rgba(102,161,238,1) 69%, rgba(102,161,238,1) 76%, rgba(102,161,238,1) 83%, rgba(102,161,238,1) 100%); /* w3c */
 
 }
 .game-well{
+  background-color:white;
   margin:auto;
-  margin-top: 100px;
+  margin-top: 10%;
+  margin-bottom: 5%;
   min-width: 400px;
   width:450px;
   height: 450px;
   padding: 10px;
-  background-color: white;
   border-style: solid;
   border-width: thin;
   border-color: #ccc;
-  box-shadow: 10px 10px 10px 0px rgba(204, 204, 204, 0.75);
   position: relative;
 }
 
+.right-shadow{
+   box-shadow: 10px 10px 10px 0px rgba(204, 204, 204, 0.75);
+}
+
 button{
- /* border: 0 !important;
+ border: 0 !important;
   -webkit-appearance: none;
   background-color: transparent;
-  */
 }
 .row.no-gutters {
   margin-right: 0;
@@ -32,16 +46,17 @@ button{
     padding-left:0;
 }
 
-.player-and-stats{
-  margin-bottom: 5px; 
-}
 
 .score-board{
-  /* background-color: rgba(204, 204, 204, 0.75);*/
-    color: white;
-    height: 110px;
-    border-radius: 0 10px 10px 0; 
-    text-transform: uppercase;
+ color: white;
+  height: 100px;
+  border-radius: 0 5px 5px 0; 
+  text-transform: uppercase;
+}
+
+.player-and-stats{
+  margin-bottom: 5px; 
+
 }
 
 .player{
@@ -69,16 +84,20 @@ button{
 }
 
 .playersTurn{
-  margin-top: 30px;
   text-transform: uppercase;
+
+}
+
+.board-container{
+  height: 100%;
 }
 
 .boxList{
   width: 100%;
-  height: 250px;
+  height: 240px;
+  position:relative;
   padding-left: 0 !important;
   list-style: none;
-  /*justify-content: space-around;*/
 }
 
 .symbolOptions{
@@ -89,6 +108,7 @@ button{
 .playersTurn{
   height: 40px;
   margin-bottom: 20px;
+  
 }
 
 .board-container{
@@ -110,6 +130,7 @@ li{
   border-top:none;
   border-left:none;
   padding: 10px;
+
 }
 
 .fa-circle-o{
@@ -124,9 +145,6 @@ li{
   transition: 0.3s ease-in;
 }
 
-.fa-5x{
-   transition: 4s ease-in;
-}
 
 
 li:nth-child(3n) {

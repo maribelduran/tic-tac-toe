@@ -1,5 +1,7 @@
+
+html,
 body{
- 
+   font-family: 'Play', sans-serif !important; 
 }
 
 .container-fluid{
@@ -10,13 +12,12 @@ body{
   background: -o-linear-gradient(131deg, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 24%, rgba(102,238,206,1) 53%, rgba(102,161,238,1) 67%, rgba(102,161,238,1) 69%, rgba(102,161,238,1) 76%, rgba(102,161,238,1) 83%, rgba(102,161,238,1) 100%); /* opera 11.10+ */
   background: -ms-linear-gradient(131deg, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 24%, rgba(102,238,206,1) 53%, rgba(102,161,238,1) 67%, rgba(102,161,238,1) 69%, rgba(102,161,238,1) 76%, rgba(102,161,238,1) 83%, rgba(102,161,238,1) 100%); /* ie10+ */
   background: linear-gradient(319deg, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 24%, rgba(102,238,206,1) 53%, rgba(102,161,238,1) 67%, rgba(102,161,238,1) 69%, rgba(102,161,238,1) 76%, rgba(102,161,238,1) 83%, rgba(102,161,238,1) 100%); /* w3c */
-
 }
+
 .game-well{
   background-color:white;
   margin:auto;
-  margin-top: 10%;
-  margin-bottom: 5%;
+  margin-top: 100px;
   min-width: 400px;
   width:450px;
   height: 450px;
@@ -31,6 +32,23 @@ body{
    box-shadow: 10px 10px 10px 0px rgba(204, 204, 204, 0.75);
 }
 
+.symbolOptions{
+  margin-top: 35%;
+  text-align: center;
+  position: relative;
+}
+
+.symbolOptions > button{
+ padding-left: 30px;
+ padding-right: 30px;
+}
+
+.symbolOptions >button:hover{
+ font-size: 20px;
+}
+
+
+
 button{
  border: 0 !important;
   -webkit-appearance: none;
@@ -42,10 +60,9 @@ button{
 }
 
 .no-gutters > [class*='col-'] {
-    padding-right:0;
-    padding-left:0;
+  padding-right:0;
+  padding-left:0;
 }
-
 
 .score-board{
  color: white;
@@ -54,9 +71,14 @@ button{
   text-transform: uppercase;
 }
 
+.board-container{
+  display: none;
+  position: relative;
+  height: 100%;
+}
+
 .player-and-stats{
   margin-bottom: 5px; 
-
 }
 
 .player{
@@ -74,22 +96,22 @@ button{
 }
 
 .stats{
-  background-color: black;
+  background-color: rgba(76,76,76,1);
   text-align: center;
   border-radius: 5px;
 }
 
 .sponsor-name{
   text-align: center;
+  color: grey;
 }
 
 .playersTurn{
+  height: 60px;
   text-transform: uppercase;
-
-}
-
-.board-container{
-  height: 100%;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  background-color: blue;
 }
 
 .boxList{
@@ -98,23 +120,6 @@ button{
   position:relative;
   padding-left: 0 !important;
   list-style: none;
-}
-
-.symbolOptions{
-  margin-top: 25%;
-  text-align: center;
-}
-
-.playersTurn{
-  height: 40px;
-  margin-bottom: 20px;
-  
-}
-
-.board-container{
-  display: none;
-  position: relative;
-  height: 100%;
 }
 
 li{
@@ -130,8 +135,9 @@ li{
   border-top:none;
   border-left:none;
   padding: 10px;
-
 }
+
+
 
 .fa-circle-o{
   color: #66a1ee;
@@ -145,7 +151,10 @@ li{
   transition: 0.3s ease-in;
 }
 
+.fa-undo{
+ color: rgba(76,76,76,1);
 
+}
 
 li:nth-child(3n) {
   border-right:none;

@@ -5,7 +5,6 @@ body{
   font-family: 'Play', sans-serif !important; 
   height: 100%;
   margin: 0;
-   background: #66a1ee; 
   background: -moz-linear-gradient(131deg, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 24%, rgba(102,238,206,1) 53%, rgba(102,161,238,1) 67%, rgba(102,161,238,1) 69%, rgba(102,161,238,1) 76%, rgba(102,161,238,1) 83%, rgba(102,161,238,1) 100%); /* ff3.6+ */
   background: -webkit-gradient(linear, left top, right bottom, color-stop(0%, rgba(102,161,238,1)), color-stop(17%, rgba(102,161,238,1)), color-stop(24%, rgba(102,161,238,1)), color-stop(31%, rgba(102,161,238,1)), color-stop(33%, rgba(102,161,238,1)), color-stop(47%, rgba(102,238,206,1)), color-stop(76%, rgba(255,255,255,1)), color-stop(100%, rgba(255,255,255,1))); /* safari4+,chrome */
   background: -webkit-linear-gradient(131deg, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 24%, rgba(102,238,206,1) 53%, rgba(102,161,238,1) 67%, rgba(102,161,238,1) 69%, rgba(102,161,238,1) 76%, rgba(102,161,238,1) 83%, rgba(102,161,238,1) 100%); /* safari5.1+,chrome10+ */
@@ -195,6 +194,7 @@ li:nth-last-child(-n+3){
 /*any devices smaller than a tablet*/
 @media only screen and  (max-width:767px) {
   .game-well{
-    width: 80%; 
+    width: 90%; 
+    margin-top: 70px;
   }
 }

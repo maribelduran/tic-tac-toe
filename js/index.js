@@ -83,7 +83,7 @@ TicTacToe.prototype.play = function(player, row, col){
 
 TicTacToe.prototype.checkWinner = function(){
 	var row = 0, col = 0;
-	//checks if there is a horizontal line of 3 of one's own symbol
+	//checks if there is a horizontal line of 3 of the same symbol
 	 for (row=0; row<=2; row++){
 	 		if (this.board[row][col] === this.board[row][col+ 1] && this.board[row][col] != 0){
 	 			if (this.board[row][col+1] === this.board[row][col+ 2]){
@@ -96,7 +96,7 @@ TicTacToe.prototype.checkWinner = function(){
         }
       }
   }
-  //checks if there is a vertical line of 3 of one's own symbol
+  //checks if there is a vertical line of 3 of the same symbol
   for (col=0, row=0; col<=2; col++){
   	if (this.board[row][col] === this.board[row+1][col] && this.board[row][col]!= 0){
   		if (this.board[row+1][col] === this.board[row+2][col]){
@@ -259,6 +259,7 @@ var controller = {
 	},
 	setPlayers: function(name, symbol){
 		model.game.setPlayers(name, symbol);
+		//update showScores to two different functions. One to be setStats and the other to be updateStats.
 		view.showScores(model.game.player1, model.game.player2);
 		view.startGame();
 		setTimeout(function (){
@@ -311,6 +312,7 @@ var controller = {
 	},	
 	playerTurn: function(row, col){
 		var move = model.game.play(model.game.currentPlayer.name, row, col);
+		//if the play method doesn't return an empty move object, show the move
 		if (Object.keys(move).length !== 0){
 			//show the computer's move on the screen
 			view.showMove(model.game.player1.symbol, move.row, move.col, true);
@@ -359,7 +361,6 @@ var view = {
 		boxList.addEventListener('onmouseout', function(event){
 			if (view.boardEnabled){
 				var boxClicked = event.target;
-				console.log(boxClicked);
 				view.removeMove(view.btnEntry[boxClicked.id][0], view.btnEntry[boxClicked.id][1]);
     		}
 		});
@@ -455,7 +456,8 @@ var view = {
 				if (this.btnEntry[prop][0] ==  winningMove[i][0] && this.btnEntry[prop][1] == winningMove[i][1]){
 					boxId.push(prop);
 					var box = document.getElementById(prop);
-				//	box.getElementsByTagName("i")[0].classList.add("fa-5x");
+
+				box.getElementsByTagName("i")[0].classList.add("fa-5x");
 				//	$('.symbol').addClass('winningMove');
 					//document.getElementById(prop).classList.add('winningMove');
 					break;
@@ -463,9 +465,9 @@ var view = {
 			}
 		}
 
-		console.log(boxId);
 		var timeoutID = setTimeout(function (){
 			boxId.forEach(function(id){
+
 				//document.getElementById(id).classList.remove('winningMove');
 			});
 		},1000);

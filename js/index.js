@@ -308,7 +308,7 @@ var controller = {
 			model.game.clearBoard();
 			view.clearGameBoard();
 			this.playGame();
-			}.bind(this),1000);
+			}.bind(this),2500);
 	},	
 	playerTurn: function(row, col){
 		var move = model.game.play(model.game.currentPlayer.name, row, col);
@@ -443,11 +443,21 @@ var view = {
 		}.bind(this));
 	},
 	showTurn: function(player){
-	
-			document.getElementsByClassName("playersTurn-name")[0].innerHTML = player.name + "'s " + "turn";
+		console.log("Should show whos turn it is");
+		document.getElementById("whosTurn").innerHTML = player.name + "'s " + "turn";
+		document.getElementById("whosTurn").style.display = "block";
+		document.getElementById("whoWon").style.display = "none"
+		
+
+			
 	},
-	clearTurn: function(player){
-			document.getElementsByClassName("playersTurn-name")[0].innerHTML = "";
+	hideTurn: function(){
+		return $("#whosTurn").fadeOut(200);
+	},
+	clearStatuses: function(player){
+			document.getElementById("whosTurn").innerHTML= "";
+			document.getElementById("whoWon").innerHTML= "";
+
 	},
 	showWinningMove: function(winningMove){
 		var boxId=[];
@@ -457,7 +467,7 @@ var view = {
 					boxId.push(prop);
 					var box = document.getElementById(prop);
 
-				box.getElementsByTagName("i")[0].classList.add("fa-5x");
+					box.getElementsByTagName("i")[0].classList.add("winningMove");
 				//	$('.symbol').addClass('winningMove');
 					//document.getElementById(prop).classList.add('winningMove');
 					break;
@@ -483,16 +493,15 @@ var view = {
 		else if (winner.name == "computer"){
 				message = "You lost this time :("
 		}
-		document.getElementById("winner_name").textContent = message;
-		document.getElementById("winner_name").classList.remove("hide")
+		document.getElementById("whoWon").style.display = "block";
+		document.getElementById("whoWon").innerHTML = message;
+		document.getElementById("whosTurn").style.display = "none";
 		
-		setTimeout(function (){
-			document.getElementById("winner_name").classList.remove("hide")
-		},1000);
+	
 	},
 	resetAll: function(){
 		this.clearGameBoard();
-		this.clearTurn();
+		this.clearStatuses();
 		this.hideBoard().promise().done(function(){
     		this.showSymbolOptions();
 		}.bind(this));

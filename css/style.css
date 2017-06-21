@@ -1,13 +1,11 @@
 /*http://www.colorzilla.com/gradient-editor/*/
 
-
 html,
 body{
-   font-family: 'Play', sans-serif !important; 
-}
-
-.container-fluid{
-  height: 100vh;
+  font-family: 'Play', sans-serif !important; 
+  height: 100%;
+  margin: 0;
+   background: #66a1ee; 
   background: -moz-linear-gradient(131deg, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 24%, rgba(102,238,206,1) 53%, rgba(102,161,238,1) 67%, rgba(102,161,238,1) 69%, rgba(102,161,238,1) 76%, rgba(102,161,238,1) 83%, rgba(102,161,238,1) 100%); /* ff3.6+ */
   background: -webkit-gradient(linear, left top, right bottom, color-stop(0%, rgba(102,161,238,1)), color-stop(17%, rgba(102,161,238,1)), color-stop(24%, rgba(102,161,238,1)), color-stop(31%, rgba(102,161,238,1)), color-stop(33%, rgba(102,161,238,1)), color-stop(47%, rgba(102,238,206,1)), color-stop(76%, rgba(255,255,255,1)), color-stop(100%, rgba(255,255,255,1))); /* safari4+,chrome */
   background: -webkit-linear-gradient(131deg, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 24%, rgba(102,238,206,1) 53%, rgba(102,161,238,1) 67%, rgba(102,161,238,1) 69%, rgba(102,161,238,1) 76%, rgba(102,161,238,1) 83%, rgba(102,161,238,1) 100%); /* safari5.1+,chrome10+ */
@@ -16,11 +14,15 @@ body{
   background: linear-gradient(319deg, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 24%, rgba(102,238,206,1) 53%, rgba(102,161,238,1) 67%, rgba(102,161,238,1) 69%, rgba(102,161,238,1) 76%, rgba(102,161,238,1) 83%, rgba(102,161,238,1) 100%); /* w3c */
 }
 
+.container-fluid{
+  height: 100vh;
+  width: 100%;
+}
+
 .game-well{
   background-color:white;
   margin:auto;
   margin-top: 100px;
-  min-width: 400px;
   width:450px;
   height: 450px;
   padding: 10px;
@@ -104,17 +106,15 @@ button::-moz-focus-inner {
     background: -o-linear-gradient(#B2CCEA, #66a1ee); /* For Opera 11.1 to 12.0 */
     background: -moz-linear-gradient(#B2CCEA, #66a1ee); /* For Firefox 3.6 to 15 */
     background: linear-gradient(#B2CCEA, #66a1ee); /* Standard syntax (must be last) */
-    */
  }
 
 .o-color{
-  background: #66eece; /* For browsers that do not support gradients */
-  /*
-    background: -webkit-linear-gradient(#A0E8D6, #66eece); /* For Safari 5.1 to 6.0 */
+  background: #66a1ee; /* For browsers that do not support gradients */
+  background: -webkit-linear-gradient(#A0E8D6, #66eece); /* For Safari 5.1 to 6.0 */
     background: -o-linear-gradient(#A0E8D6, #66eece); /* For Opera 11.1 to 12.0 */
     background: -moz-linear-gradient(#A0E8D6, #66eece); /* For Firefox 3.6 to 15 */
     background: linear-gradient(#A0E8D6, #66eece); /* Standard syntax (must be last) */
-    */
+    
 }
 
 .black-gradient{
@@ -192,4 +192,9 @@ li:nth-last-child(-n+3){
   -webkit-text-fill-color: transparent;
 }
 
-.
+/*any devices smaller than a tablet*/
+@media only screen and  (max-width:767px) {
+  .game-well{
+    width: 80%; 
+  }
+}

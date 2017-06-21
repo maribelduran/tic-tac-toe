@@ -5,6 +5,7 @@ body{
   font-family: 'Play', sans-serif !important; 
   height: 100%;
   margin: 0;
+  background:white;
   background: -moz-linear-gradient(131deg, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 24%, rgba(102,238,206,1) 53%, rgba(102,161,238,1) 67%, rgba(102,161,238,1) 69%, rgba(102,161,238,1) 76%, rgba(102,161,238,1) 83%, rgba(102,161,238,1) 100%); /* ff3.6+ */
   background: -webkit-gradient(linear, left top, right bottom, color-stop(0%, rgba(102,161,238,1)), color-stop(17%, rgba(102,161,238,1)), color-stop(24%, rgba(102,161,238,1)), color-stop(31%, rgba(102,161,238,1)), color-stop(33%, rgba(102,161,238,1)), color-stop(47%, rgba(102,238,206,1)), color-stop(76%, rgba(255,255,255,1)), color-stop(100%, rgba(255,255,255,1))); /* safari4+,chrome */
   background: -webkit-linear-gradient(131deg, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 24%, rgba(102,238,206,1) 53%, rgba(102,161,238,1) 67%, rgba(102,161,238,1) 69%, rgba(102,161,238,1) 76%, rgba(102,161,238,1) 83%, rgba(102,161,238,1) 100%); /* safari5.1+,chrome10+ */
@@ -182,7 +183,7 @@ li:nth-last-child(-n+3){
 
 .fa-times{
   color: #66eece;
-  text-shadow: 5px 5px;
+  text-shadow: 6px 6px;
   transition: 0.3s ease-in;
 }
 
@@ -194,7 +195,7 @@ li:nth-last-child(-n+3){
 /*any devices smaller than a tablet*/
 @media only screen and  (max-width:767px) {
   .game-well{
-    width: 90%; 
+    width: 95%; 
     margin-top: 70px;
   }
 }

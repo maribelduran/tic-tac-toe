@@ -37,14 +37,23 @@ body{
 }
 
 .symbolOptions{
-  margin-top: 30%;
-  text-align: center;
   position: relative;
 }
 
+.top-center{
+  position: absolute;
+  top: 50%;
+}
+
+
+
+
 .symbolOptions > button{
+  background-color: blue;
  padding-left: 30px;
  padding-right: 30px;
+ position: relative;
+ top: 50px;
 }
 
 .symbolOptions >button:hover{
@@ -195,7 +204,7 @@ li:nth-last-child(-n+3){
 /*any devices smaller than a tablet*/
 @media only screen and  (max-width:767px) {
   .game-well{
-    width: 95%; 
+    width: 100%; 
     margin-top: 70px;
   }
 }

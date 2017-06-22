@@ -260,9 +260,9 @@ var controller = {
 	setPlayers: function(name, symbol){
 		model.game.setPlayers(name, symbol);
 		//update showScores to two different functions. One to be setStats and the other to be updateStats.
-		view.showScores(model.game.player1, model.game.player2);
+		view.setScoreBoard(model.game.player1, model.game.player2);
 		view.startGame();
-		setTimeout(function (){
+		var timeoutID = setTimeout(function (){
 			this.playGame();
 		}.bind(this),1000);
 	},
@@ -297,18 +297,18 @@ var controller = {
 	//shows winner and start new game round
 	showWinnerAndReplay: function(){
 		var timeoutID = setTimeout(function (){
+			view.updateScores(model.game.player1.score, model.game.player2.score);
 			if (model.game.winner !== null){
 				view.showWinningMove(model.game.winningMoves);
 			}
 			view.showWinner(model.game.winner);
-			view.showScores(model.game.player1, model.game.player2);
 			},1000);
 
-		 setTimeout(function (){
+		 timeoutID = setTimeout(function (){
 			model.game.clearBoard();
 			view.clearGameBoard();
 			this.playGame();
-			}.bind(this),2500);
+			}.bind(this),3000);
 	},	
 	playerTurn: function(row, col){
 		var move = model.game.play(model.game.currentPlayer.name, row, col);
@@ -346,22 +346,11 @@ var view = {
 		boxList.addEventListener('click', function(event){
 			if (view.boardEnabled){
 				var boxClicked = event.target;
+				//if the boxClicked isn't already filled
+				console.log(boxClicked);
 				//var boxClickedVal = boxClicked.className
 				//console.log(boxClickedVal);
 				controller.playerTurn(view.btnEntry[boxClicked.id][0], view.btnEntry[boxClicked.id][1]);
-    		}
-		});
-
-		boxList.addEventListener('onmouseover', function(event){
-			if (view.boardEnabled){
-				var boxClicked = event.target;
-				controller.checkMove(view.btnEntry[boxClicked.id][0], view.btnEntry[boxClicked.id][1]);
-    		}
-		});
-		boxList.addEventListener('onmouseout', function(event){
-			if (view.boardEnabled){
-				var boxClicked = event.target;
-				view.removeMove(view.btnEntry[boxClicked.id][0], view.btnEntry[boxClicked.id][1]);
     		}
 		});
 
@@ -402,34 +391,45 @@ var view = {
 		}else{
 			box.getElementsByTagName("i")[0].classList.add(circleIcon);
 		}
-		
-		//document.getElementById(box).innerHTML = symbol;
-	},
-	removeMove: function(col,row){
-		var boxID = "";
-
-		for (prop in this.btnEntry){
-			if (this.btnEntry[prop][0] ==  row && this.btnEntry[prop][1] == col){
-				box = prop;
-				break;
-			}
-		}
-		var box = document.getElementById(boxID);
-	},
-	clearGameBoard: function(){
-		$("li>i").removeClass('fa-circle-o fa-times');
 	},
 	showBoard: function(){
 		$(".board-container").fadeIn(1200);
 	},
+	clearGameBoard: function(){
+		$("li>i").removeClass('fa-circle-o fa-times text-shadow');
+	},
 	hideBoard: function(){
 		return $(".board-container").fadeOut(300);
 	},
-	showScores: function(player1, player2){
-	//	document.getElementsByClassName("player1-score")[0].innerHTML = model.game.player1.name + ": " + model.game.player1.score;
-		//document.getElementsByClassName("computer-score")[0].innerHTML = model.game.player2.name + ": " + model.game.player2.score;
+	setScoreBoard: function(player1, player2){
+		var player1Color =  (player1.symbol.toUpperCase() == "X") ? "x-gradient-color" : "o-gradient-color";
+		var player2Color = (player2.symbol.toUpperCase() == "X") ? "x-gradient-color" : "o-gradient-color";
+
+		document.getElementsByClassName("player1")[0].classList.add(player1Color);
+		document.getElementsByClassName("player2")[0].classList.add(player2Color);
+		
+		document.getElementsByClassName("player1-name")[0].innerHTML = model.game.player1.name;
+		document.getElementsByClassName("player2-name")[0].innerHTML = model.game.player2.name;
+		
 		document.getElementsByClassName("player1-score")[0].innerHTML = model.game.player1.score;
-		document.getElementsByClassName("computer-score")[0].innerHTML =model.game.player2.score;
+		document.getElementsByClassName("player2-score")[0].innerHTML =model.game.player2.score;
+	},
+	clearScoreBoard: function(){
+		//document.getElementsByClassName("player1")[0].classList.remove(player1Color);
+		$('.player1').removeClass('x-gradient-color o-gradient-color');
+		
+		//document.getElementsByClassName("player2")[0].classList.remove(player2Color);
+		$('.player2').removeClass('x-gradient-color o-gradient-color');
+
+		document.getElementsByClassName("player1-name")[0].innerHTML = "";
+		document.getElementsByClassName("player2-name")[0].innerHTML = "";
+		
+		document.getElementsByClassName("player1-score")[0].innerHTML = "";
+		document.getElementsByClassName("player2-score")[0].innerHTML ="";
+	},
+	updateScores: function(player1Score, player2Score){
+		document.getElementsByClassName("player1-score")[0].innerHTML = player1Score;
+		document.getElementsByClassName("player2-score")[0].innerHTML = player2Score;
 	},
 	hideSymbolOptions: function(){
 		return $(".symbolOptions").fadeOut(200);
@@ -443,13 +443,9 @@ var view = {
 		}.bind(this));
 	},
 	showTurn: function(player){
-		console.log("Should show whos turn it is");
 		document.getElementById("whosTurn").innerHTML = player.name + "'s " + "turn";
 		document.getElementById("whosTurn").style.display = "block";
-		document.getElementById("whoWon").style.display = "none"
-		
-
-			
+		document.getElementById("whoWon").style.display = "none"		
 	},
 	hideTurn: function(){
 		return $("#whosTurn").fadeOut(200);
@@ -457,51 +453,37 @@ var view = {
 	clearStatuses: function(player){
 			document.getElementById("whosTurn").innerHTML= "";
 			document.getElementById("whoWon").innerHTML= "";
-
 	},
 	showWinningMove: function(winningMove){
-		var boxId=[];
 		for (var i=0; i<winningMove.length;i++){
 			for (prop in this.btnEntry){
 				if (this.btnEntry[prop][0] ==  winningMove[i][0] && this.btnEntry[prop][1] == winningMove[i][1]){
-					boxId.push(prop);
 					var box = document.getElementById(prop);
-
-					box.getElementsByTagName("i")[0].classList.add("winningMove");
-				//	$('.symbol').addClass('winningMove');
-					//document.getElementById(prop).classList.add('winningMove');
+					box.getElementsByTagName("i")[0].classList.add("text-shadow");
 					break;
 				}
 			}
 		}
-
-		var timeoutID = setTimeout(function (){
-			boxId.forEach(function(id){
-
-				//document.getElementById(id).classList.remove('winningMove');
-			});
-		},1000);
 	},
 	showWinner: function(winner){
 		var message = ""
 		if (winner == null){
-				message = "It was a tie..."
+				message = "It was a tie"
 		}
 		else if (winner.name == "player1"){
 				message	= "You Won :)"
 		}
 		else if (winner.name == "computer"){
-				message = "You lost this time :("
+				message = "You lost this time -_-"
 		}
 		document.getElementById("whoWon").style.display = "block";
 		document.getElementById("whoWon").innerHTML = message;
 		document.getElementById("whosTurn").style.display = "none";
-		
-	
 	},
 	resetAll: function(){
 		this.clearGameBoard();
 		this.clearStatuses();
+		this.clearScoreBoard();
 		this.hideBoard().promise().done(function(){
     		this.showSymbolOptions();
 		}.bind(this));

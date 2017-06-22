@@ -30,7 +30,7 @@ body{
 }
 
 .right-shadow{
-   box-shadow: 10px 10px 10px 0px rgba(204, 204, 204, 0.75);
+  box-shadow: 10px 10px 10px 0px rgba(204, 204, 204, 0.75);
 }
 
 .symbolOptions{
@@ -168,9 +168,8 @@ button::-moz-focus-inner {
 }
 
 .text-shadow{ 
-  text-shadow: 20px 20px 20px #ccc;
-  -webkit-text-shadow: 20px 20px 20px #ccc;
-
+  text-shadow: 12px 5px 5px #ccc !important;
+  -webkit-text-shadow: 12px 5px 5px #ccc !important;;
 }
 
 .statuses{

@@ -1,6 +1,6 @@
 # Tic-Tac-Toe - Advanced Front End Development Project
 
-# Challenge Details from FreeCodeCamp
+## Challenge Details from FreeCodeCamp
 
 Objective: Build a CodePen.io app that is functionally similar to this: https://codepen.io/FreeCodeCamp/full/KzXQgy/.
 

@@ -1,4 +1,3 @@
-//http://javascript.info/settimeout-setinterval
 //http://www.geeksforgeeks.org/minimax-algorithm-in-game-theory-set-3-tic-tac-toe-ai-finding-optimal-move/
 //https://stackoverflow.com/questions/8207897/jquery-waiting-for-the-fadeout-to-complete-before-running-fadein
 const MAX_PLAYERS = 2;
@@ -45,11 +44,11 @@ function flipCoin(min, max){
  	return Math.floor(Math.random() * (max - min)) + min;
 }
 
-//returns a succesful move or empty move;
+//returns a succesful move or empty object;
 TicTacToe.prototype.play = function(player, row, col){
 	var move = {};
 	//place symbol
-	if (player == "computer"){
+	if (player.toLowerCase() == "computer"){
 		move = this.getBestMove();
 		this.board[move.row][move.col] = this.player2.symbol;
 	}
@@ -90,9 +89,8 @@ TicTacToe.prototype.checkWinner = function(){
 	 				this.winningMoves = [[row,col],[row,col+1], [row,col+2]];
 	 				if (this.board[row][col] == this.currentPlayer.symbol){
 	 					return 10;
-	 				}else{
-	 					return -10;
 	 				}
+	 				return -10;
         }
       }
   }
@@ -135,6 +133,7 @@ TicTacToe.prototype.checkWinner = function(){
 	return 0;
 }
 
+//returns false if  a value of 0 is found in the board
 TicTacToe.prototype.isGameFinished = function(){
 	for (var i=0; i<this.board.length; i++){
 		var row = this.board[i];
@@ -220,6 +219,7 @@ TicTacToe.prototype.minimax = function(board, depth, isMaximizingPlayer){
 //returns boolean reperesenting whether the cell in the board has been filled
 TicTacToe.prototype.moveFilled = function(row,col){
 	//if the cell is empty return false
+	console.log(row, col)
 	if (this.board[row][col] == 0){
 		return false;
 	}
@@ -245,7 +245,7 @@ TicTacToe.prototype.clearBoard = function(){
 	];
 }
 
-//model
+//model layer
 var model = {
 	game: {},
 	setupGame: function(){
@@ -253,6 +253,7 @@ var model = {
 	}
 };
 
+//controller layer
 var controller = {
 	initializeGame: function(){
 		model.setupGame();
@@ -269,7 +270,7 @@ var controller = {
 	playGame: function(move){
 		if (!model.game.finished){
 			//if the curent player is the computer, then disable the board and let computer take a turn
-			if (model.game.currentPlayer.name == "computer"){
+			if (model.game.currentPlayer.name.toLowerCase() == "computer"){
 				view.disableBoard();
 				view.showTurn(model.game.currentPlayer);
 				var move = model.game.play(model.game.currentPlayer.name);
@@ -288,11 +289,6 @@ var controller = {
 			view.disableBoard();
 			this.showWinnerAndReplay();
 		}
-	},
-	resetAll: function(){
-		model.game.reset();
-		view.disableBoard();
-		view.resetAll();
 	},
 	//shows winner and start new game round
 	showWinnerAndReplay: function(){
@@ -315,14 +311,14 @@ var controller = {
 		//if the play method doesn't return an empty move object, show the move
 		if (Object.keys(move).length !== 0){
 			//show the computer's move on the screen
-			view.showMove(model.game.player1.symbol, move.row, move.col, true);
+			view.showMove(model.game.player1.symbol, move.row, move.col);
 		}
 		this.playGame();				
 	},
-	checkMove: function(row,col){
-		if (!model.game.moveFilled(row,col)){
-			view.showMove(model.game.currentPlayer.symbol, row, col, false);
-		}
+	resetAll: function(){
+		model.game.reset();
+		view.disableBoard();
+		view.resetAll();
 	}
 };
 
@@ -340,28 +336,22 @@ var view = {
 		"box8": [2,2],
 		},
 		setUpEventListeners: function(){
+		  var boxList = document.querySelector("ul");
 
-		var boxList = document.querySelector("ul");
-
-		boxList.addEventListener('click', function(event){
-			if (view.boardEnabled){
-				var boxClicked = event.target;
-				//if the boxClicked isn't already filled
-				console.log(boxClicked);
-				//var boxClickedVal = boxClicked.className
-				//console.log(boxClickedVal);
-				controller.playerTurn(view.btnEntry[boxClicked.id][0], view.btnEntry[boxClicked.id][1]);
+		  boxList.addEventListener('click', function(event){
+		    if (view.boardEnabled){
+				  var boxClicked = event.target;
+					console.log(boxClicked);
+					controller.playerTurn(view.btnEntry[boxClicked.id][0], view.btnEntry[boxClicked.id][1]);
     		}
 		});
 
 		document.getElementById("X").addEventListener("click", function(){
 				controller.setPlayers("player1", "X");
 		 });
-
 		document.getElementById("O").addEventListener("click", function(){
 				controller.setPlayers("player1", "O");
 		 });
-
 		document.getElementById("reset").addEventListener("click", function(){
 			controller.resetAll();
 		});
@@ -372,7 +362,7 @@ var view = {
 	disableBoard: function(){
 		this.boardEnabled = false;
 	},
-	showMove: function(symbol,row, col, isClicked){
+	showMove: function(playerSymbol,row, col){
 		var boxID = "";
 
 		for (prop in this.btnEntry){
@@ -382,54 +372,49 @@ var view = {
 			}
 		}
 		var box = document.getElementById(boxID);
-
 		var circleIcon = "fa-circle-o";
 		var timesIcon = "fa-times";
 
-		if (symbol.toUpperCase() == "X"){
-				box.getElementsByTagName("i")[0].classList.add(timesIcon);
-		}else{
-			box.getElementsByTagName("i")[0].classList.add(circleIcon);
-		}
+		var fontIcon = (playerSymbol.toUpperCase() == "X") ? timesIcon : circleIcon;
+		box.getElementsByTagName("i")[0].classList.add(fontIcon);
 	},
-	showBoard: function(){
+	showBoardContainer: function(){
 		$(".board-container").fadeIn(1200);
 	},
 	clearGameBoard: function(){
 		$("li>i").removeClass('fa-circle-o fa-times text-shadow');
 	},
-	hideBoard: function(){
+	hideBoardContainer: function(){
 		return $(".board-container").fadeOut(300);
 	},
 	setScoreBoard: function(player1, player2){
 		var player1Color =  (player1.symbol.toUpperCase() == "X") ? "x-gradient-color" : "o-gradient-color";
 		var player2Color = (player2.symbol.toUpperCase() == "X") ? "x-gradient-color" : "o-gradient-color";
 
-		document.getElementsByClassName("player1")[0].classList.add(player1Color);
-		document.getElementsByClassName("player2")[0].classList.add(player2Color);
-		
-		document.getElementsByClassName("player1-name")[0].innerHTML = model.game.player1.name;
-		document.getElementsByClassName("player2-name")[0].innerHTML = model.game.player2.name;
-		
-		document.getElementsByClassName("player1-score")[0].innerHTML = model.game.player1.score;
-		document.getElementsByClassName("player2-score")[0].innerHTML =model.game.player2.score;
+	//document.getElementsByClassName("player1")[0].classList.add(player1Color);
+		$('.player1').addClass(player1Color);
+		$('.player2').addClass(player2Color);
+			
+		//document.getElementsByClassName("player1-name")[0].innerHTML = model.game.player1.name;
+		$('.player1-name').html(model.game.player1.name);
+		$('.player2-name').html(model.game.player2.name);
+			
+		$('.player1-score').html(model.game.player1.score);
+		$('.player2-score').html(model.game.player2.score);
 	},
 	clearScoreBoard: function(){
-		//document.getElementsByClassName("player1")[0].classList.remove(player1Color);
 		$('.player1').removeClass('x-gradient-color o-gradient-color');
-		
-		//document.getElementsByClassName("player2")[0].classList.remove(player2Color);
 		$('.player2').removeClass('x-gradient-color o-gradient-color');
 
-		document.getElementsByClassName("player1-name")[0].innerHTML = "";
-		document.getElementsByClassName("player2-name")[0].innerHTML = "";
+		$('.player1-name').html("");
+		$('.player2-name').html("");
 		
-		document.getElementsByClassName("player1-score")[0].innerHTML = "";
-		document.getElementsByClassName("player2-score")[0].innerHTML ="";
+		$('.player1-score').html("");
+		$('.player2-score').html("");
 	},
 	updateScores: function(player1Score, player2Score){
-		document.getElementsByClassName("player1-score")[0].innerHTML = player1Score;
-		document.getElementsByClassName("player2-score")[0].innerHTML = player2Score;
+		$('.player1-score').html(player1Score);
+		$('.player2-score').html(player2Score);
 	},
 	hideSymbolOptions: function(){
 		return $(".symbolOptions").fadeOut(200);
@@ -439,11 +424,11 @@ var view = {
 	},
 	startGame: function(){
 		this.hideSymbolOptions().promise().done(function(){
-    		this.showBoard();
+    		this.showBoardContainer();
 		}.bind(this));
 	},
 	showTurn: function(player){
-		document.getElementById("whosTurn").innerHTML = player.name + "'s " + "turn";
+		$('#whosTurn').html( player.name + "'s " + "turn");
 		document.getElementById("whosTurn").style.display = "block";
 		document.getElementById("whoWon").style.display = "none"		
 	},
@@ -451,8 +436,8 @@ var view = {
 		return $("#whosTurn").fadeOut(200);
 	},
 	clearStatuses: function(player){
-			document.getElementById("whosTurn").innerHTML= "";
-			document.getElementById("whoWon").innerHTML= "";
+		$('#whosTurn').html("");
+		$('#whosWon').html("");
 	},
 	showWinningMove: function(winningMove){
 		for (var i=0; i<winningMove.length;i++){
@@ -484,7 +469,7 @@ var view = {
 		this.clearGameBoard();
 		this.clearStatuses();
 		this.clearScoreBoard();
-		this.hideBoard().promise().done(function(){
+		this.hideBoardContainer().promise().done(function(){
     		this.showSymbolOptions();
 		}.bind(this));
 	}

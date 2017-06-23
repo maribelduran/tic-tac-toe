@@ -55,7 +55,7 @@ TicTacToe.prototype.play = function(player, row, col){
 	else{
 		//if move hasn't already been taken then set that move to the player's symbol
 		if (!this.moveFilled(row,col)){
-			this.board[row][col] = this.player1.symbol;
+		 this.board[row][col] = this.player1.symbol;
 			move.row = row;
 			move.col = col;
 		}else{
@@ -81,6 +81,8 @@ TicTacToe.prototype.play = function(player, row, col){
 };
 
 TicTacToe.prototype.checkWinner = function(){
+
+
 	var row = 0, col = 0;
 	//checks if there is a horizontal line of 3 of the same symbol
 	 for (row=0; row<=2; row++){
@@ -157,9 +159,11 @@ TicTacToe.prototype.getBestMove = function(){
 			if (this.board[row][col] === 0){
 				//make the move and call minimax
 				this.board[row][col] = this.currentPlayer.symbol;
+				
 				var currentMoveVal = this.minimax(this.board, 0, false);
 				//undo the move
 				this.board[row][col] = 0;
+				this.winningMoves = null;
 				if (currentMoveVal > bestMove.val){
 					bestMove.row = row;
 					bestMove.col = col;
@@ -174,6 +178,7 @@ TicTacToe.prototype.getBestMove = function(){
 TicTacToe.prototype.minimax = function(board, depth, isMaximizingPlayer){
 	//if board is in terminal state, then return value of board
 	var score = this.checkWinner();
+	this.winningMoves = null;
 
 	//If Maximizer or Minimizer has won the game return player's score
 	if (score == 10){
@@ -196,6 +201,7 @@ TicTacToe.prototype.minimax = function(board, depth, isMaximizingPlayer){
 					this.board[row][col] = this.currentPlayer.symbol;
 					bestVal = Math.max(bestVal, this.minimax(board, depth+1, !isMaximizingPlayer));
 					this.board[row][col] = 0;
+					this.winningMoves = null;
 				}
 			}
 		}
@@ -209,6 +215,7 @@ TicTacToe.prototype.minimax = function(board, depth, isMaximizingPlayer){
 					this.board[row][col] = this.currentPlayer == this.player1 ? this.player2.symbol : this.player1.symbol;
 					bestVal = Math.min(bestVal, this.minimax(board, depth+1, !isMaximizingPlayer));
 					this.board[row][col] = 0;
+					this.winningMoves = null;
 				}
 			}
 		}
@@ -219,7 +226,6 @@ TicTacToe.prototype.minimax = function(board, depth, isMaximizingPlayer){
 //returns boolean reperesenting whether the cell in the board has been filled
 TicTacToe.prototype.moveFilled = function(row,col){
 	//if the cell is empty return false
-	console.log(row, col)
 	if (this.board[row][col] == 0){
 		return false;
 	}
@@ -294,9 +300,8 @@ var controller = {
 	showWinnerAndReplay: function(){
 		var timeoutID = setTimeout(function (){
 			view.updateScores(model.game.player1.score, model.game.player2.score);
-			if (model.game.winner !== null){
-				view.showWinningMove(model.game.winningMoves);
-			}
+			console.log(model.game.winningMoves);
+			view.showWinningMove(model.game.winningMoves);
 			view.showWinner(model.game.winner);
 			},1000);
 
@@ -341,7 +346,6 @@ var view = {
 		  boxList.addEventListener('click', function(event){
 		    if (view.boardEnabled){
 				  var boxClicked = event.target;
-					console.log(boxClicked);
 					controller.playerTurn(view.btnEntry[boxClicked.id][0], view.btnEntry[boxClicked.id][1]);
     		}
 		});
@@ -440,15 +444,20 @@ var view = {
 		$('#whosWon').html("");
 	},
 	showWinningMove: function(winningMove){
-		for (var i=0; i<winningMove.length;i++){
-			for (prop in this.btnEntry){
-				if (this.btnEntry[prop][0] ==  winningMove[i][0] && this.btnEntry[prop][1] == winningMove[i][1]){
-					var box = document.getElementById(prop);
-					box.getElementsByTagName("i")[0].classList.add("text-shadow");
-					break;
-				}
-			}
+		if (winningMove == null){
+			$("li>i").addClass('text-shadow');
 		}
+		else{
+			for (var i=0; i<winningMove.length;i++){
+				for (prop in this.btnEntry){
+				  if (this.btnEntry[prop][0] ==  winningMove[i][0] && this.btnEntry[prop][1] == winningMove[i][1]){
+					  var box = document.getElementById(prop);
+					  box.getElementsByTagName("i")[0].classList.add("text-shadow");
+					  break;
+					}
+			  }
+		  }
+	  }
 	},
 	showWinner: function(winner){
 		var message = ""

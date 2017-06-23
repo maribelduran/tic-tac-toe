@@ -139,6 +139,7 @@ button::-moz-focus-inner {
 .fa-times{
   color: #66eece;  
   transition: 0.3s ease-in;
+
 }
 
 .fa-circle-o{
@@ -185,10 +186,12 @@ button::-moz-focus-inner {
   height: 240px;
   padding-left: 0 !important;
   list-style: none;
+  position: relative;
 }
 
 li{
   position: relative;
+  
   width: 33.33%;
   height: 33.33%;
   float:left;
@@ -201,6 +204,11 @@ li{
   box-sizing: border-box;
   padding: 10px;
 }
+
+li > i{
+  pointer-events:none
+}
+
 
 li:nth-child(3n) {
   border-right:none;

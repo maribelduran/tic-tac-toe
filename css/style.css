@@ -238,7 +238,6 @@ a:link {
 a:visited{
  color: #66eece !important;
 }
-}
 
 /*any devices smaller than a tablet*/
 @media only screen and  (max-width:550px) {

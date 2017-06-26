@@ -304,11 +304,14 @@ var controller = {
 			view.showWinner(model.game.winner);
 			},1000);
 
-		 timeoutID = setTimeout(function (){
+		this.replayGame();
+	},
+	replayGame: function(){
+		var timeoutID = setTimeout(function (){
 			model.game.clearBoard();
 			view.clearGameBoard();
 			this.playGame();
-			}.bind(this),10000);
+			}.bind(this),3000);
 	},	
 	playerTurn: function(row, col){
 		var move = model.game.play(model.game.currentPlayer.name, row, col);

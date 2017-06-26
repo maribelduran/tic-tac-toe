@@ -300,7 +300,6 @@ var controller = {
 	showWinnerAndReplay: function(){
 		var timeoutID = setTimeout(function (){
 			view.updateScores(model.game.player1.score, model.game.player2.score);
-			console.log(model.game.winningMoves);
 			view.showWinningMove(model.game.winningMoves);
 			view.showWinner(model.game.winner);
 			},1000);
@@ -309,7 +308,7 @@ var controller = {
 			model.game.clearBoard();
 			view.clearGameBoard();
 			this.playGame();
-			}.bind(this),3000);
+			}.bind(this),10000);
 	},	
 	playerTurn: function(row, col){
 		var move = model.game.play(model.game.currentPlayer.name, row, col);
